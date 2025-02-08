@@ -1,80 +1,263 @@
+{# templates/backoffice/auth-sign-up.html.twig #}
 {% extends 'base_back.html.twig' %}
 
 {% block title %} Admin Dashboard {% endblock %}
 
 {% block content %}
-    <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="signup-card card-block auth-body mr-auto ml-auto">
-                        <form class="md-float-material">
-                            <div class="text-center">
-                                <img src="{{ asset('assets/images/auth/logo-dark.png') }}" alt="logo">
-                            </div>
-                            <div class="auth-box">
-                                <div class="row m-b-20">
-                                    <div class="col-md-12">
-                                        <h3 class="text-center txt-primary">Sign up. It is fast and easy.</h3>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Choose Username">
-                                    <span class="md-line"></span>
-                                </div>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Your Email Address">
-                                    <span class="md-line"></span>
-                                </div>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" placeholder="Choose Password">
-                                    <span class="md-line"></span>
-                                </div>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" placeholder="Confirm Password">
-                                    <span class="md-line"></span>
-                                </div>
-                                <div class="row m-t-25 text-left">
-                                    <div class="col-md-12">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label>
-                                                <input type="checkbox" value="">
-                                                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                                <span class="text-inverse">I read and accept <a href="#">Terms & Conditions.</a></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label>
-                                                <input type="checkbox" value="">
-                                                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                                <span class="text-inverse">Send me the <a href="#!">Newsletter</a> weekly.</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row m-t-30">
-                                    <div class="col-md-12">
-                                        <button type="button" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign up now.</button>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <p class="text-inverse text-left m-b-0">Thank you and enjoy our website.</p>
-                                        <p class="text-inverse text-left"><b>Your Authentication Team</b></p>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <img src="{{ asset('assets/images/auth/Logo-small-bottom.png') }}" alt="small-logo">
-                                    </div>
+<style>
+    .pcoded {
+        opacity: 0 !important;
+        visibility: hidden!important;
+    }
+    .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+        text-align: left;
+        padding-left: 10px;
+    }
+    .input-error {
+        border-color: #dc3545 !important;
+    }
+    .input-success {
+        border-color: #28a745 !important;
+    }
+</style>
+<section class="login p-fixed d-flex text-center bg-primary common-img-bg" style='    justify-content: center;
+'>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="signup-card card-block auth-body mr-auto ml-auto">
+                    {{ form_start(form, {'attr': {'class': 'md-float-material'}}) }}
+                        
+                        <div class="auth-box">
+                            <div class="row m-b-20">
+                                <div class="col-md-12">
+                                    <h3 class="text-center txt-primary">Sign up. It is fast and easy.</h3>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                            <hr/>
+
+                            {# Champ Nom #}
+                            <div class="input-group">
+                            {{ form_widget(form.nom, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre nom',
+                                    'id': 'nom'
+                                }
+                            }) }}
+                            <span class="md-line"></span>
+                            <div class="error-message" id="nomError"></div>
+                        </div>
+
+                        {# Champ Prénom #}
+                        <div class="input-group">
+                            {{ form_widget(form.prenom, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre prénom',
+                                    'id': 'prenom'
+                                }
+                            }) }}
+                            <span class="md-line"></span>
+                            <div class="error-message" id="prenomError"></div>
+                        </div>
+
+                            {# Champ Email #}
+                            <div class="input-group">
+                            {{ form_widget(form.email, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre email',
+                                    'id': 'email'
+                                }
+                            }) }}
+                            <span class="md-line"></span>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+
+                            {# Champ Mot de passe #}
+                            <div class="input-group">
+                            {{ form_widget(form.mot_de_passe, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Choisir un mot de passe',
+                                    'id': 'motDePasse'
+                                }
+                            }) }}
+                            <span class="md-line"></span>
+                            <div class="error-message" id="motDePasseError"></div>
+                        </div>
+
+                            {# Champ Role #}
+                            <div class="input-group">
+                                {{ form_widget(form.role, {
+                                    'attr': {
+                                        'class': 'form-control'
+                                    }
+                                }) }}
+                                <span class="md-line"></span>
+                            </div>
+
+                          
+
+                            <div class="row m-t-30">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign up now</button>
+                                </div>
+                                <div class="col-md-12">
+                                    <a href="{{ path('login') }}" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Have an account?</a>
+                                </div>
+                            </div>
+
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <p class="text-inverse text-left m-b-0">Thank you and enjoy our website.</p>
+                                    <p class="text-inverse text-left"><b>Your Authentication Team</b></p>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sélectionner les éléments du formulaire
+    const nomInput = document.querySelector('input[name="user[nom]"]');
+    const prenomInput = document.querySelector('input[name="user[prenom]"]');
+    const emailInput = document.querySelector('input[name="user[email]"]');
+    const passwordInput = document.querySelector('input[name="user[mot_de_passe]"]');
+    const form = document.querySelector('form');
+
+    // Fonction pour ajouter un message d'erreur
+    function addError(input, message) {
+        // Supprimer l'ancien message d'erreur s'il existe
+        const existingError = input.parentElement.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        // Créer et ajouter le nouveau message d'erreur
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = message;
+        input.parentElement.appendChild(errorDiv);
+        input.classList.add('input-error');
+        input.classList.remove('input-success');
+    }
+
+    // Fonction pour supprimer le message d'erreur
+    function removeError(input) {
+        const errorDiv = input.parentElement.querySelector('.error-message');
+        if (errorDiv) {
+            errorDiv.remove();
+        }
+        input.classList.remove('input-error');
+        input.classList.add('input-success');
+    }
+
+    // Validation du nom
+    function validateNom(input) {
+        const value = input.value.trim();
+        if (value === '') {
+            addError(input, 'Le nom est obligatoire');
+            return false;
+        } else if (!/^[A-Z][a-zA-Z]*$/.test(value)) {
+            addError(input, 'Le nom doit commencer par une majuscule');
+            return false;
+        }
+        removeError(input);
+        return true;
+    }
+
+    // Validation du prénom
+    function validatePrenom(input) {
+        const value = input.value.trim();
+        if (value === '') {
+            addError(input, 'Le prénom est obligatoire');
+            return false;
+        } else if (!/^[A-Z][a-zA-Z]*$/.test(value)) {
+            addError(input, 'Le prénom doit commencer par une majuscule');
+            return false;
+        }
+        removeError(input);
+        return true;
+    }
+
+    // Validation de l'email
+    function validateEmail(input) {
+        const value = input.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (value === '') {
+            addError(input, 'L\'email est obligatoire');
+            return false;
+        } else if (!emailRegex.test(value)) {
+            addError(input, 'Veuillez entrer un email valide');
+            return false;
+        }
+        removeError(input);
+        return true;
+    }
+
+    // Validation du mot de passe
+    function validatePassword(input) {
+        const value = input.value;
+        if (value === '') {
+            addError(input, 'Le mot de passe est obligatoire');
+            return false;
+        } else if (value.length < 8) {
+            addError(input, 'Le mot de passe doit contenir au moins 8 caractères');
+            return false;
+        }
+        removeError(input);
+        return true;
+    }
+
+    // Ajouter les écouteurs d'événements
+    if (nomInput) {
+        nomInput.addEventListener('input', () => validateNom(nomInput));
+        nomInput.addEventListener('blur', () => validateNom(nomInput));
+    }
+
+    if (prenomInput) {
+        prenomInput.addEventListener('input', () => validatePrenom(prenomInput));
+        prenomInput.addEventListener('blur', () => validatePrenom(prenomInput));
+    }
+
+    if (emailInput) {
+        emailInput.addEventListener('input', () => validateEmail(emailInput));
+        emailInput.addEventListener('blur', () => validateEmail(emailInput));
+    }
+
+    if (passwordInput) {
+        passwordInput.addEventListener('input', () => validatePassword(passwordInput));
+        passwordInput.addEventListener('blur', () => validatePassword(passwordInput));
+    }
+
+    // Validation du formulaire à la soumission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+
+            if (!validateNom(nomInput)) isValid = false;
+            if (!validatePrenom(prenomInput)) isValid = false;
+            if (!validateEmail(emailInput)) isValid = false;
+            if (!validatePassword(passwordInput)) isValid = false;
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

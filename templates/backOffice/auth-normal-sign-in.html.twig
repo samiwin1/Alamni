@@ -8,13 +8,21 @@
 {% block preloader %}{% endblock %}
 {% block main %}{% endblock %}
 
-
 {% block content %}
-    <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+    <section class="login p-fixed d-flex text-center bg-primary common-img-bg" style='    justify-content: center;
+'>
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="login-card card-block auth-body mr-auto ml-auto">
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
                         <form class="md-float-material" method="post" action="{{ path('login') }}">
                             <div class="text-center">
                                 <img src="{{ asset('back/images/auth/logo-dark.png') }}" alt="logo.png">
@@ -34,27 +42,18 @@
                                     <input type="password" name="_password" class="form-control" placeholder="Password" required>
                                     <span class="md-line"></span>
                                 </div>
-                                <div class="row m-t-25 text-left">
-                                    <div class="col-sm-7 col-xs-12">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label>
-                                                <input type="checkbox" name="_remember_me" value="1">
-                                                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                                <span class="text-inverse">Remember me</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
                                 <div class="row m-t-30">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign in</button>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <a href="{{ path('app_signin') }}" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign up</a>
                                     </div>
                                 </div>
                                 <hr/>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <p class="text-inverse text-left m-b-0">Thank you and enjoy our website.</p>
+                                        <p class="text-inverse text-left m-b-0">Thank you.</p>
                                         <p class="text-inverse text-left"><b>Your Authentication Team</b></p>
                                     </div>
                                     <div class="col-md-2">
@@ -71,16 +70,22 @@
 {% endblock %}
 
 {% block css %}
- <link rel="icon" href="back/images/favicon.ico" type="image/x-icon">
-    <!-- Google font-->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,800" rel="stylesheet">
-    <!-- Required Fremwork -->
-    <link rel="stylesheet" type="text/css" href="back/css/bootstrap/css/bootstrap.min.css">
-    <!-- themify-icons line icon -->
-    <link rel="stylesheet" type="text/css" href="back/icon/themify-icons/themify-icons.css">
-    <!-- ico font -->
-    <link rel="stylesheet" type="text/css" href="back/icon/icofont/css/icofont.css">
-    <!-- Style.css -->
-    <link rel="stylesheet" type="text/css" href="back/css/style.css">
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('back/css/style.css') }}">
+    <style>
+        .alert {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+    </style>
 {% endblock %}
