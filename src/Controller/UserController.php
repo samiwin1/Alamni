@@ -9,85 +9,155 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/user')]
-final class UserController extends AbstractController
+class UserController extends AbstractController
 {
-    #[Route(name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    private function getLoggedInUser(Request $request, EntityManagerInterface $entityManager): ?User
     {
-        return $this->render('backoffice/user/index.html.twig', [
+        $email = $request->getSession()->get('user_email');
+        if (!$email) {
+            return null;
+        }
+        return $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+    }
+
+    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    public function index(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getLoggedInUser($request, $entityManager);
+        if (!$user) {
+            $this->addFlash('error', 'Veuillez vous connecter');
+            return $this->redirectToRoute('login');
+        }
+
+        if ($user->getRole() !== 'ROLE_ADMIN') {
+            $this->addFlash('error', 'Accès non autorisé');
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
+            'user' => $user
         ]);
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $currentUser = $this->getLoggedInUser($request, $entityManager);
+        if (!$currentUser || $currentUser->getRole() !== 'ROLE_ADMIN') {
+            $this->addFlash('error', 'Accès non autorisé');
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
         $user = new User();
-        // Définir la date d'inscription
-        $user->setDateInscription(new \DateTimeImmutable());
+        $user->setDateInscription(date('Y-m-d H:i:s'));
         
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hasher le mot de passe si nécessaire
-            // $user->setMotDePasse(password_hash($user->getMotDePasse(), PASSWORD_DEFAULT));
+            // Gestion de la photo
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                $imageContent = file_get_contents($photoFile->getPathname());
+                $base64Image = base64_encode($imageContent);
+                $user->setPhoto($base64Image);
+            }
+
+            $user->setMotDePasse(password_hash($user->getMotDePasse(), PASSWORD_DEFAULT));
             
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Utilisateur créé avec succès!');
+            $this->addFlash('success', 'Utilisateur créé avec succès');
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('backoffice/auth-sign-up.html.twig', [
+        return $this->render('user/new.html.twig', [
             'user' => $user,
-            'form' => $form->createView(),
+            'form' => $form,
+            'logged_user' => $currentUser
         ]);
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    public function show(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('backoffice/user/show.html.twig', [
+        $currentUser = $this->getLoggedInUser($request, $entityManager);
+        if (!$currentUser || $currentUser->getRole() !== 'ROLE_ADMIN') {
+            $this->addFlash('error', 'Accès non autorisé');
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        return $this->render('user/show.html.twig', [
             'user' => $user,
+            'logged_user' => $currentUser
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $currentUser = $this->getLoggedInUser($request, $entityManager);
+        if (!$currentUser || $currentUser->getRole() !== 'ROLE_ADMIN') {
+            $this->addFlash('error', 'Accès non autorisé');
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        $form = $this->createForm(UserType::class, $user, ['is_edit' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hasher le mot de passe si modifié
-            // if ($user->getMotDePasse() !== $originalPassword) {
-            //     $user->setMotDePasse(password_hash($user->getMotDePasse(), PASSWORD_DEFAULT));
-            // }
-            
+            // Gestion de la photo
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                $imageContent = file_get_contents($photoFile->getPathname());
+                $base64Image = base64_encode($imageContent);
+                $user->setPhoto($base64Image);
+            }
+
+            // Gestion du mot de passe
+            $newPassword = $form->get('mot_de_passe')->getData();
+            if (!empty($newPassword)) {
+                $user->setMotDePasse(password_hash($newPassword, PASSWORD_DEFAULT));
+            }
+
             $entityManager->flush();
 
-            $this->addFlash('success', 'Utilisateur modifié avec succès!');
+            $this->addFlash('success', 'Utilisateur modifié avec succès');
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('backoffice/user/edit.html.twig', [
+        return $this->render('user/edit.html.twig', [
             'user' => $user,
-            'form' => $form->createView(),
+            'form' => $form,
+            'logged_user' => $currentUser
         ]);
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+        $currentUser = $this->getLoggedInUser($request, $entityManager);
+        if (!$currentUser || $currentUser->getRole() !== 'ROLE_ADMIN') {
+            $this->addFlash('error', 'Accès non autorisé');
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            // Empêcher la suppression de son propre compte via cette route
+            if ($user->getId() === $currentUser->getId()) {
+                $this->addFlash('error', 'Vous ne pouvez pas supprimer votre propre compte ici');
+                return $this->redirectToRoute('app_user_index');
+            }
+
             $entityManager->remove($user);
             $entityManager->flush();
-            $this->addFlash('success', 'Utilisateur supprimé avec succès!');
+
+            $this->addFlash('success', 'Utilisateur supprimé avec succès');
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);

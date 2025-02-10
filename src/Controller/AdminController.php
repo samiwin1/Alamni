@@ -38,7 +38,6 @@ class AdminController extends AbstractController
     #[Route('/login', name: 'login')]
     public function login(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Si déjà connecté, rediriger vers le dashboard
         if ($this->getLoggedInUser($request, $entityManager)) {
             return $this->redirectToRoute('admin_dashboard');
         }
@@ -64,22 +63,26 @@ class AdminController extends AbstractController
     #[Route('/sign-in', name: 'app_signin')]
     public function signin(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Si déjà connecté, rediriger vers le dashboard
         if ($this->getLoggedInUser($request, $entityManager)) {
             return $this->redirectToRoute('admin_dashboard');
         }
 
         $user = new User();
-        $user->setDateInscription(date('Y-m-d H:i:s'));
+        $user->setDateInscription(new \DateTime());
         
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hasher le mot de passe
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                $imageContent = file_get_contents($photoFile->getPathname());
+                $base64Image = base64_encode($imageContent);
+                $user->setPhoto($base64Image);
+            }
+
             $user->setMotDePasse(password_hash($user->getMotDePasse(), PASSWORD_DEFAULT));
             
-            // Définir un rôle par défaut si non spécifié
             if (!$user->getRole()) {
                 $user->setRole('ROLE_USER');
             }
@@ -100,14 +103,95 @@ class AdminController extends AbstractController
     public function profile(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getLoggedInUser($request, $entityManager);
-        // if (!$user) {
-        //     $this->addFlash('error', 'Veuillez vous connecter');
-        //     return $this->redirectToRoute('login');
-        // }
+        if (!$user) {
+            $this->addFlash('error', 'Veuillez vous connecter');
+            return $this->redirectToRoute('login');
+        }
         
         return $this->render('backOffice/profile.html.twig', [
             'user' => $user
         ]);
+    }
+
+    #[Route('/profile/edit', name: 'user_profile_edit')]
+    public function editProfile(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getLoggedInUser($request, $entityManager);
+        if (!$user) {
+            $this->addFlash('error', 'Veuillez vous connecter');
+            return $this->redirectToRoute('login');
+        }
+    
+        $form = $this->createForm(UserType::class, $user, [
+            'is_edit' => true,
+        ]);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion de la photo
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                $imageContent = file_get_contents($photoFile->getPathname());
+                $base64Image = base64_encode($imageContent);
+                $user->setPhoto($base64Image);
+            }
+    
+            // Gestion du mot de passe
+            $newPassword = $form->get('mot_de_passe')->getData();
+            if (!empty($newPassword)) {
+                $user->setMotDePasse(password_hash($newPassword, PASSWORD_DEFAULT));
+            }
+            // Si pas de nouveau mot de passe, on garde l'ancien
+    
+            $entityManager->flush();
+            $this->addFlash('success', 'Profil mis à jour avec succès');
+            return $this->redirectToRoute('user_profile');
+        }
+    
+        return $this->render('backOffice/profile_edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user
+        ]);
+    }
+
+    #[Route('/profile/delete', name: 'user_profile_delete', methods: ['POST'])]
+    public function deleteProfile(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        try {
+            $user = $this->getLoggedInUser($request, $entityManager);
+            if (!$user) {
+                $this->addFlash('error', 'Veuillez vous connecter');
+                return $this->redirectToRoute('login');
+            }
+    
+            $token = $request->request->get('_token');
+            
+            // Debug
+            dump([
+                'token_received' => $token,
+                'user_id' => $user->getId(),
+                'csrf_valid' => $this->isCsrfTokenValid('delete'.$user->getId(), $token)
+            ]);
+    
+            if (!$this->isCsrfTokenValid('delete'.$user->getId(), $token)) {
+                $this->addFlash('error', 'Token de sécurité invalide');
+                return $this->redirectToRoute('user_profile');
+            }
+    
+            // Déconnexion de l'utilisateur
+            $request->getSession()->clear();
+            
+            // Suppression du compte
+            $entityManager->remove($user);
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'Votre compte a été supprimé avec succès');
+            return $this->redirectToRoute('login');
+    
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue : ' . $e->getMessage());
+            return $this->redirectToRoute('user_profile');
+        }
     }
 
     #[Route('/logout', name: 'logout')]
@@ -118,23 +202,5 @@ class AdminController extends AbstractController
         
         $this->addFlash('success', 'Vous avez été déconnecté');
         return $this->redirectToRoute('login');
-    }
-
-    #[Route('/admin/users', name: 'admin_user')]
-    public function adminUsers(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getLoggedInUser($request, $entityManager);
-        if (!$user) {
-            $this->addFlash('error', 'Veuillez vous connecter');
-            return $this->redirectToRoute('login');
-        }
-
-        // Récupérer tous les utilisateurs
-        $users = $entityManager->getRepository(User::class)->findAll();
-        
-        return $this->render('backOffice/users.html.twig', [
-            'user' => $user,
-            'users' => $users
-        ]);
     }
 }

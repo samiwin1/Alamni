@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -9,7 +10,7 @@ class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -27,8 +28,11 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $role = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $date_inscription = null;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $photo = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $date_inscription = null;
 
     public function getId(): ?int
     {
@@ -40,10 +44,9 @@ class User
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -52,10 +55,9 @@ class User
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
@@ -64,10 +66,9 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -76,10 +77,9 @@ class User
         return $this->mot_de_passe;
     }
 
-    public function setMotDePasse(string $mot_de_passe): static
+    public function setMotDePasse(string $mot_de_passe): self
     {
         $this->mot_de_passe = $mot_de_passe;
-
         return $this;
     }
 
@@ -88,22 +88,36 @@ class User
         return $this->role;
     }
 
-    public function setRole(string $role): static
+    public function setRole(string $role): self
     {
         $this->role = $role;
-
         return $this;
     }
 
-    public function getDateInscription(): ?string
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
+        return $this;
+    }
+
+    public function getDateInscription(): ?\DateTimeInterface
     {
         return $this->date_inscription;
     }
 
-    public function setDateInscription(string $date_inscription): static
+    public function setDateInscription(\DateTimeInterface $date_inscription): self
     {
         $this->date_inscription = $date_inscription;
-
         return $this;
+    }
+
+    public function getFormattedDateInscription(): string
+    {
+        return $this->date_inscription ? $this->date_inscription->format('Y-m-d H:i:s') : '';
     }
 }

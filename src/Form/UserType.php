@@ -8,8 +8,10 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class UserType extends AbstractType
 {
@@ -33,32 +35,68 @@ class UserType extends AbstractType
                     'class' => 'form-control',
                     'placeholder' => 'Votre email'
                 ]
-            ])
-            ->add('mot_de_passe', PasswordType::class, [
+            ]);
+
+        // Ajouter le champ mot de passe avec des options différentes selon le contexte
+        if ($options['is_edit']) {
+            $builder->add('mot_de_passe', PasswordType::class, [
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Laissez vide pour garder le même mot de passe'
+                ]
+            ]);
+        } else {
+            $builder->add('mot_de_passe', PasswordType::class, [
+                'required' => true,
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Minimum 8 caractères'
                 ]
-            ])
-            ->add('role', ChoiceType::class, [
+            ]);
+        }
+
+        if (!$options['is_edit']) {
+            $builder->add('role', ChoiceType::class, [
                 'choices' => [
-                    'eleve' => 'Role_eleve',
-                    'enseigant' => 'ROLE_enseigant',
-                    'parent' => 'ROLE_parent',
+                    'Élève' => 'ROLE_ELEVE',
+                    'Enseignant' => 'ROLE_ENSEIGNANT',
+                    'Parent' => 'ROLE_PARENT',
                     'Administrateur' => 'ROLE_ADMIN'
-                    
                 ],
                 'attr' => [
                     'class' => 'form-control'
                 ]
-            ])
-        ;
+            ]);
+        }
+
+        $builder->add('photo', FileType::class, [
+            'label' => 'Photo de profil',
+            'mapped' => false,
+            'required' => false,
+            'constraints' => [
+                new File([
+                    'maxSize' => '2M',
+                    'mimeTypes' => [
+                        'image/jpeg',
+                        'image/png',
+                        'image/gif',
+                    ],
+                    'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF)',
+                ])
+            ],
+            'attr' => [
+                'class' => 'form-control'
+            ]
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_edit' => false,
         ]);
     }
 }

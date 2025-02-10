@@ -1,7 +1,6 @@
-{# templates/backoffice/auth-sign-up.html.twig #}
 {% extends 'base_back.html.twig' %}
 
-{% block title %} Admin Dashboard {% endblock %}
+{% block title %}Sign Up{% endblock %}
 
 {% block content %}
 <style>
@@ -9,255 +8,201 @@
         opacity: 0 !important;
         visibility: hidden!important;
     }
-    .error-message {
-        color: #dc3545;
-        font-size: 12px;
-        margin-top: 5px;
-        display: none;
-        text-align: left;
-        padding-left: 10px;
+    .login {
+        min-height: 100vh;
+        background: url('{{ asset('back/images/bg.jpg') }}') no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .input-error {
-        border-color: #dc3545 !important;
+    .auth-box {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        max-width: 450px;
+        width: 100%;
+        margin: 20px auto;
     }
-    .input-success {
-        border-color: #28a745 !important;
+    .preview-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 10px auto;
+        border: 3px solid #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .form-control {
+        height: 45px;
+        margin-bottom: 15px;
+    }
+    .btn-primary {
+        height: 45px;
+        font-size: 16px;
+    }
+    .logo-container {
+        margin-bottom: 20px;
+    }
+    .logo-container img {
+        max-width: 150px;
     }
 </style>
-<section class="login p-fixed d-flex text-center bg-primary common-img-bg" style='    justify-content: center;
-'>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="signup-card card-block auth-body mr-auto ml-auto">
-                    {{ form_start(form, {'attr': {'class': 'md-float-material'}}) }}
-                        
-                        <div class="auth-box">
-                            <div class="row m-b-20">
-                                <div class="col-md-12">
-                                    <h3 class="text-center txt-primary">Sign up. It is fast and easy.</h3>
-                                </div>
-                            </div>
-                            <hr/>
 
-                            {# Champ Nom #}
-                            <div class="input-group">
+<section class="login">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6" style="max-width: 100%;">
+                <div class="auth-box">
+                    <div class="logo-container text-center">
+                        <img src="{{ asset('back/images/logo.png') }}" alt="logo" class="img-fluid">
+                    </div>
+                    <h3 class="text-center mb-4">Créer un compte</h3>
+
+                    {{ form_start(form, {'attr': {'id': 'signupForm'}}) }}
+                        
+                        {# Photo #}
+                        <div class="form-group text-center">
+                            <div id="imagePreview" style="display: none;">
+                                <img src="" alt="Aperçu" class="preview-image">
+                            </div>
+                            <div class="custom-file">
+                                {{ form_widget(form.photo, {
+                                    'attr': {
+                                        'class': 'custom-file-input',
+                                        'id': 'photoInput',
+                                        'accept': 'image/*'
+                                    }
+                                }) }}
+                                <label class="custom-file-label" for="photoInput">Choisir une photo</label>
+                            </div>
+                            {{ form_errors(form.photo) }}
+                        </div>
+
+                        {# Nom #}
+                        <div class="form-group">
                             {{ form_widget(form.nom, {
                                 'attr': {
                                     'class': 'form-control',
-                                    'placeholder': 'Votre nom',
-                                    'id': 'nom'
+                                    'placeholder': 'Votre nom'
                                 }
                             }) }}
-                            <span class="md-line"></span>
-                            <div class="error-message" id="nomError"></div>
+                            {{ form_errors(form.nom) }}
                         </div>
 
-                        {# Champ Prénom #}
-                        <div class="input-group">
+                        {# Prénom #}
+                        <div class="form-group">
                             {{ form_widget(form.prenom, {
                                 'attr': {
                                     'class': 'form-control',
-                                    'placeholder': 'Votre prénom',
-                                    'id': 'prenom'
+                                    'placeholder': 'Votre prénom'
                                 }
                             }) }}
-                            <span class="md-line"></span>
-                            <div class="error-message" id="prenomError"></div>
+                            {{ form_errors(form.prenom) }}
                         </div>
 
-                            {# Champ Email #}
-                            <div class="input-group">
+                        {# Email #}
+                        <div class="form-group">
                             {{ form_widget(form.email, {
                                 'attr': {
                                     'class': 'form-control',
-                                    'placeholder': 'Votre email',
-                                    'id': 'email'
+                                    'placeholder': 'Votre email'
                                 }
                             }) }}
-                            <span class="md-line"></span>
-                            <div class="error-message" id="emailError"></div>
+                            {{ form_errors(form.email) }}
                         </div>
 
-                            {# Champ Mot de passe #}
-                            <div class="input-group">
+                        {# Mot de passe #}
+                        <div class="form-group">
                             {{ form_widget(form.mot_de_passe, {
                                 'attr': {
                                     'class': 'form-control',
-                                    'placeholder': 'Choisir un mot de passe',
-                                    'id': 'motDePasse'
+                                    'placeholder': 'Mot de passe (8 caractères minimum)'
                                 }
                             }) }}
-                            <span class="md-line"></span>
-                            <div class="error-message" id="motDePasseError"></div>
+                            {{ form_errors(form.mot_de_passe) }}
                         </div>
 
-                            {# Champ Role #}
-                            <div class="input-group">
-                                {{ form_widget(form.role, {
-                                    'attr': {
-                                        'class': 'form-control'
-                                    }
-                                }) }}
-                                <span class="md-line"></span>
-                            </div>
+                        {# Role #}
+                        <div class="form-group">
+                            {{ form_widget(form.role, {
+                                'attr': {
+                                    'class': 'form-control'
+                                }
+                            }) }}
+                            {{ form_errors(form.role) }}
+                        </div>
 
-                          
-
-                            <div class="row m-t-30">
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign up now</button>
-                                </div>
-                                <div class="col-md-12">
-                                    <a href="{{ path('login') }}" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Have an account?</a>
-                                </div>
-                            </div>
-
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <p class="text-inverse text-left m-b-0">Thank you and enjoy our website.</p>
-                                    <p class="text-inverse text-left"><b>Your Authentication Team</b></p>
-                                </div>
-                               
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="terms" required>
+                                <label class="custom-control-label" for="terms">
+                                    J'accepte les <a href="#">conditions d'utilisation</a>
+                                </label>
                             </div>
                         </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Créer Mon Compte</button>
+
+                        <div class="text-center mt-4">
+                            <p>Vous avez déjà un compte ? <a href="{{ path('login') }}">Se connecter</a></p>
+                        </div>
+
                     {{ form_end(form) }}
                 </div>
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Sélectionner les éléments du formulaire
-    const nomInput = document.querySelector('input[name="user[nom]"]');
-    const prenomInput = document.querySelector('input[name="user[prenom]"]');
-    const emailInput = document.querySelector('input[name="user[email]"]');
-    const passwordInput = document.querySelector('input[name="user[mot_de_passe]"]');
-    const form = document.querySelector('form');
+    const photoInput = document.getElementById('photoInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = imagePreview.querySelector('img');
+    const fileLabel = document.querySelector('.custom-file-label');
 
-    // Fonction pour ajouter un message d'erreur
-    function addError(input, message) {
-        // Supprimer l'ancien message d'erreur s'il existe
-        const existingError = input.parentElement.querySelector('.error-message');
-        if (existingError) {
-            existingError.remove();
-        }
+    photoInput.addEventListener('change', function(e) {
+        const file = this.files[0];
+        
+        fileLabel.textContent = file ? file.name : 'Choisir une photo';
 
-        // Créer et ajouter le nouveau message d'erreur
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.style.display = 'block';
-        errorDiv.textContent = message;
-        input.parentElement.appendChild(errorDiv);
-        input.classList.add('input-error');
-        input.classList.remove('input-success');
-    }
-
-    // Fonction pour supprimer le message d'erreur
-    function removeError(input) {
-        const errorDiv = input.parentElement.querySelector('.error-message');
-        if (errorDiv) {
-            errorDiv.remove();
-        }
-        input.classList.remove('input-error');
-        input.classList.add('input-success');
-    }
-
-    // Validation du nom
-    function validateNom(input) {
-        const value = input.value.trim();
-        if (value === '') {
-            addError(input, 'Le nom est obligatoire');
-            return false;
-        } else if (!/^[A-Z][a-zA-Z]*$/.test(value)) {
-            addError(input, 'Le nom doit commencer par une majuscule');
-            return false;
-        }
-        removeError(input);
-        return true;
-    }
-
-    // Validation du prénom
-    function validatePrenom(input) {
-        const value = input.value.trim();
-        if (value === '') {
-            addError(input, 'Le prénom est obligatoire');
-            return false;
-        } else if (!/^[A-Z][a-zA-Z]*$/.test(value)) {
-            addError(input, 'Le prénom doit commencer par une majuscule');
-            return false;
-        }
-        removeError(input);
-        return true;
-    }
-
-    // Validation de l'email
-    function validateEmail(input) {
-        const value = input.value.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (value === '') {
-            addError(input, 'L\'email est obligatoire');
-            return false;
-        } else if (!emailRegex.test(value)) {
-            addError(input, 'Veuillez entrer un email valide');
-            return false;
-        }
-        removeError(input);
-        return true;
-    }
-
-    // Validation du mot de passe
-    function validatePassword(input) {
-        const value = input.value;
-        if (value === '') {
-            addError(input, 'Le mot de passe est obligatoire');
-            return false;
-        } else if (value.length < 8) {
-            addError(input, 'Le mot de passe doit contenir au moins 8 caractères');
-            return false;
-        }
-        removeError(input);
-        return true;
-    }
-
-    // Ajouter les écouteurs d'événements
-    if (nomInput) {
-        nomInput.addEventListener('input', () => validateNom(nomInput));
-        nomInput.addEventListener('blur', () => validateNom(nomInput));
-    }
-
-    if (prenomInput) {
-        prenomInput.addEventListener('input', () => validatePrenom(prenomInput));
-        prenomInput.addEventListener('blur', () => validatePrenom(prenomInput));
-    }
-
-    if (emailInput) {
-        emailInput.addEventListener('input', () => validateEmail(emailInput));
-        emailInput.addEventListener('blur', () => validateEmail(emailInput));
-    }
-
-    if (passwordInput) {
-        passwordInput.addEventListener('input', () => validatePassword(passwordInput));
-        passwordInput.addEventListener('blur', () => validatePassword(passwordInput));
-    }
-
-    // Validation du formulaire à la soumission
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            let isValid = true;
-
-            if (!validateNom(nomInput)) isValid = false;
-            if (!validatePrenom(prenomInput)) isValid = false;
-            if (!validateEmail(emailInput)) isValid = false;
-            if (!validatePassword(passwordInput)) isValid = false;
-
-            if (!isValid) {
-                e.preventDefault();
+        if (file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Veuillez sélectionner une image valide');
+                this.value = '';
+                return;
             }
-        });
-    }
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert('La taille de l\'image ne doit pas dépasser 2MB');
+                this.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                imagePreview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.style.display = 'none';
+        }
+    });
+
+    const form = document.getElementById('signupForm');
+    form.addEventListener('submit', function(e) {
+        const password = form.querySelector('[type="password"]');
+        if (password.value.length < 8) {
+            e.preventDefault();
+            alert('Le mot de passe doit contenir au moins 8 caractères');
+        }
+    });
 });
 </script>
 {% endblock %}
