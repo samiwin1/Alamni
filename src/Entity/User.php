@@ -34,6 +34,12 @@ class User
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $date_inscription = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $niveau = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nom_niveau = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -116,8 +122,30 @@ class User
         return $this;
     }
 
+    public function getNiveau(): ?string
+    {
+        return $this->niveau;
+    }
+
+    public function setNiveau(?string $niveau): self
+    {
+        $this->niveau = $niveau;
+        return $this;
+    }
+
+    public function getNomNiveau(): ?string
+    {
+        return $this->nom_niveau;
+    }
+
+    public function setNomNiveau(?string $nom_niveau): self
+    {
+        $this->nom_niveau = $nom_niveau;
+        return $this;
+    }
+
     public function getFormattedDateInscription(): string
     {
-        return $this->date_inscription ? $this->date_inscription->format('Y-m-d H:i:s') : '';
+        return $this->date_inscription ? $this->date_inscription->format('d/m/Y H:i') : '';
     }
 }

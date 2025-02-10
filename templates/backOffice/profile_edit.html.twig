@@ -127,6 +127,19 @@
                 {{ form_errors(form.email) }}
             </div>
 
+
+            <div class="form-group">
+                {{ form_label(form.niveau) }}
+                {{ form_widget(form.niveau) }}
+                {{ form_errors(form.niveau) }}
+            </div>
+
+            <div class="form-group" id="nomNiveauGroup">
+                {{ form_label(form.nom_niveau) }}
+                {{ form_widget(form.nom_niveau) }}
+                {{ form_errors(form.nom_niveau) }}
+            </div>
+
             <div class="form-group">
                 {{ form_label(form.mot_de_passe, 'Nouveau mot de passe (laisser vide pour ne pas changer)') }}
                 {{ form_widget(form.mot_de_passe, {'required': false, 'attr': {'class': 'form-control'}}) }}

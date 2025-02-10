@@ -48,6 +48,46 @@
     .logo-container img {
         max-width: 150px;
     }
+    .form-group select {
+        height: 45px;
+        padding: 0 15px;
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: white;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    .form-group select:focus {
+        border-color: #4099ff;
+        box-shadow: 0 0 0 0.2rem rgba(64, 153, 255, 0.25);
+    }
+    #nomNiveauGroup {
+        transition: all 0.3s ease;
+    }
+    .custom-file {
+        margin-bottom: 15px;
+    }
+    .custom-file-label {
+        height: 45px;
+        line-height: 2.5;
+    }
+    .custom-control {
+        margin-bottom: 15px;
+    }
+    .alert {
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+    }
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    .form-control{
+        width: 100%;
+    }
 </style>
 
 <section class="login">
@@ -134,6 +174,28 @@
                             {{ form_errors(form.role) }}
                         </div>
 
+                        {# Niveau #}
+                        <div class="form-group">
+                            {{ form_widget(form.niveau, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Sélectionnez votre niveau'
+                                }
+                            }) }}
+                            {{ form_errors(form.niveau) }}
+                        </div>
+
+                        {# Nom du niveau #}
+                        <div class="form-group" id="nomNiveauGroup" style="width:100%;">
+                            {{ form_widget(form.nom_niveau, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Précisez votre niveau (ex: 6ème, 2nde...)'
+                                }
+                            }) }}
+                            {{ form_errors(form.nom_niveau) }}
+                        </div>
+
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="terms" required>
@@ -165,7 +227,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const imagePreview = document.getElementById('imagePreview');
     const previewImage = imagePreview.querySelector('img');
     const fileLabel = document.querySelector('.custom-file-label');
+    const niveauSelect = document.querySelector('[name$="[niveau]"]');
+    const nomNiveauGroup = document.getElementById('nomNiveauGroup');
+    const roleSelect = document.querySelector('[name$="[role]"]');
 
+    // Gestion de la photo
     photoInput.addEventListener('change', function(e) {
         const file = this.files[0];
         
@@ -195,14 +261,45 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Gestion du niveau
+    function toggleNomNiveau() {
+        const isEleve = roleSelect.value === 'ROLE_ELEVE';
+        if (isEleve && niveauSelect.value) {
+            nomNiveauGroup.style.display = 'block';
+        } else {
+            nomNiveauGroup.style.display = 'none';
+        }
+    }
+
+    niveauSelect.addEventListener('change', toggleNomNiveau);
+    roleSelect.addEventListener('change', toggleNomNiveau);
+
+    // Validation du formulaire
     const form = document.getElementById('signupForm');
     form.addEventListener('submit', function(e) {
         const password = form.querySelector('[type="password"]');
         if (password.value.length < 8) {
             e.preventDefault();
             alert('Le mot de passe doit contenir au moins 8 caractères');
+            return;
+        }
+
+        const isEleve = roleSelect.value === 'ROLE_ELEVE';
+        if (isEleve && niveauSelect.value && !form.querySelector('[name$="[nom_niveau]"]').value) {
+            e.preventDefault();
+            alert('Veuillez préciser votre niveau');
+            return;
+        }
+
+        if (!document.getElementById('terms').checked) {
+            e.preventDefault();
+            alert('Veuillez accepter les conditions d\'utilisation');
+            return;
         }
     });
+
+    // État initial
+    toggleNomNiveau();
 });
 </script>
 {% endblock %}

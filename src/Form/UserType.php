@@ -37,7 +37,6 @@ class UserType extends AbstractType
                 ]
             ]);
 
-        // Ajouter le champ mot de passe avec des options différentes selon le contexte
         if ($options['is_edit']) {
             $builder->add('mot_de_passe', PasswordType::class, [
                 'mapped' => false,
@@ -71,25 +70,46 @@ class UserType extends AbstractType
             ]);
         }
 
-        $builder->add('photo', FileType::class, [
-            'label' => 'Photo de profil',
-            'mapped' => false,
-            'required' => false,
-            'constraints' => [
-                new File([
-                    'maxSize' => '2M',
-                    'mimeTypes' => [
-                        'image/jpeg',
-                        'image/png',
-                        'image/gif',
-                    ],
-                    'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF)',
-                ])
-            ],
-            'attr' => [
-                'class' => 'form-control'
-            ]
-        ]);
+        $builder
+            ->add('niveau', ChoiceType::class, [
+                'label' => 'Niveau d\'études',
+                'required' => false,
+                'choices' => [
+                    'Collège' => 'college',
+                    'Lycée' => 'lycee'
+                ],
+                'placeholder' => 'Sélectionnez un niveau',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('nom_niveau', TextType::class, [
+                'label' => 'Nom du niveau',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Ex: 6ème, 5ème, 2nde, etc.'
+                ]
+            ])
+            ->add('photo', FileType::class, [
+                'label' => 'Photo de profil',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF)',
+                    ])
+                ],
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
