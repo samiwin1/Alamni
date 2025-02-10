@@ -1,0 +1,71 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Event index{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header" style="padding: 20px; text-align: right;">
+            <a href="{{ path('app_event_new') }}" class="btn btn-success btn-lg">
+                 Add Event
+            </a>
+        </div>
+        <div class="card-header">
+            <h2>Liste des évènement</h2>
+        </div>
+        <div class="card-body">
+            {% if events is empty %}
+                <div class="alert alert-warning">Aucun évènement trouvé.</div>
+            {% else %}
+                <table class="table table-bordered table-striped" style="border-spacing: 25px; border-collapse: separate;">
+                    <thead>
+                        <tr>
+                            <th class="px-7">Id</th>
+                            <th class="px-7">Nom</th>
+                            <th class="px-7">Description</th>
+                            <th class="px-7">Date</th>
+                            <th class="px-7">Heure_Debut</th>
+                            <th class="px-7">Heure_Fin</th>
+                            <th class="px-7">Lieu</th>
+                            <th class="px-7">Image</th>
+                            <th class="px-7">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                            <tr>
+                                <td class="px-7">{{ event.id }}</td>
+                                <td class="px-7">{{ event.nom }}</td>
+                                <td class="px-7">{{ event.description }}</td>
+                                <td class="px-7">{{ event.date ? event.date|date('Y-m-d') : '' }}</td>
+                                <td class="px-7">{{ event.heureDebut ? event.heureDebut|date('H:i:s') : '' }}</td>
+                                <td class="px-7">{{ event.heureFin ? event.heureFin|date('H:i:s') : '' }}</td>
+                                <td class="px-7">{{ event.lieu }}</td>
+                                <td class="px-7">{{ event.image }}</td>
+                                <td class="px-7">
+                                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info btn-sm mx-2">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </a>
+                                    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning btn-sm mx-2">
+                                        <i class="fas fa-edit"></i> Modifier
+                                    </a>
+                                    <form method="post" action="{{ path('app_event_delete', {'id': event.id}) }}" 
+                                          onsubmit="return confirm('Voulez-vous vraiment supprimer cette matière ?');"
+                                          style="display: inline-block;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger btn-sm mx-2">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="9">No records found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

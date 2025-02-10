@@ -1,0 +1,25 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+    <div class="event-edit-container">
+        <h1 class="event-edit-title">Modifier l'évènement</h1>
+
+        {{ form_start(form) }}
+            <table class="event-edit-table">
+                {% for field in form %}
+                    {% if field.vars.name != '_token' %}
+                        <tr>
+                            <td class="event-edit-label">{{ form_label(field) }}</td>
+                            <td class="event-edit-field">{{ form_widget(field) }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+            
+            <div class="event-edit-buttons">
+                <button type="submit" class="btn btn-primary">Modifier</button>
+                <a href="{{ path('app_event_index') }}" class="btn btn-secondary">Retour</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

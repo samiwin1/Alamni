@@ -1,0 +1,55 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Détails de l'événement{% endblock %}
+
+{% block body %}
+    <h1>Détails de l'événement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ event.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ event.nom }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ event.description }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ event.date ? event.date|date('d/m/Y') : 'Non spécifiée' }}</td>
+            </tr>
+            <tr>
+                <th>Heure de début</th>
+                <td>{{ event.heureDebut ? event.heureDebut|date('H:i') : 'Non spécifiée' }}</td>
+            </tr>
+            <tr>
+                <th>Heure de fin</th>
+                <td>{{ event.heureFin ? event.heureFin|date('H:i') : 'Non spécifiée' }}</td>
+            </tr>
+            <tr>
+                <th>Lieu</th>
+                <td>{{ event.lieu }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>
+                    {% if event.image %}
+                        <img src="{{ asset('uploads/events/' ~ event.image) }}" alt="{{ event.nom }}" style="max-width: 200px;">
+                    {% else %}
+                        Aucune image
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_event_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-primary">Modifier</a>
+
+    {{ include('event/_delete_form.html.twig') }}
+{% endblock %}
