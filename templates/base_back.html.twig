@@ -51,8 +51,6 @@
     </div>
     {% endblock %} -->
     <!-- Pre-loader end -->
-
-{% block content %} {% endblock %}
    
 
             <!-- Navbar -->
@@ -165,8 +163,9 @@
             <!-- Navbar End -->
             {% block main %}
 
-            <div class="pcoded-main-container">
-                <div class="pcoded-wrapper">
+           <div class="pcoded-main-container">
+             <div class="pcoded-wrapper d-flex">
+            <nav class="pcoded-navbar" style="width: 250px;">
             {% endblock %}
                     <!-- Sidebar -->
                     {% block sidebar %}
@@ -241,23 +240,11 @@
                     </nav>
                     {% endblock %}
                     <!-- Sidebar End -->
+            </navbar>
 
-                    <div class="pcoded-content">
-                        <div class="pcoded-inner-content">
-                            <div class="main-body">
-                                <div class="page-wrapper">
-                                    
-                                    {% block welc %}
-                                    <div class="page-body">
-                                        <h1>Welcome to Admin Dashboard</h1>
-                                    </div>
-                                    {% endblock %}
-
-                                    <div id="styleSelector"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="pcoded-content flex-grow-1">
+            {% block content %}{% endblock %}
+        </div>
 
                 </div>
             </div>

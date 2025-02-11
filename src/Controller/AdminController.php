@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Discussion;
+use App\Form\Discussion1Type;
+use App\Repository\DiscussionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -26,9 +30,11 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/discussions', name: 'discussions')]
-    public function descussion(): Response
+    public function discussions(DiscussionRepository $discussionRepository): Response
     {
-        return $this->render('backOffice/discussions.html.twig');
+        return $this->render('backOffice/discussions.html.twig', [
+            'discussions' => $discussionRepository->findAll(),
+        ]);
     }
 
     #[Route('/publication', name: 'publication')]

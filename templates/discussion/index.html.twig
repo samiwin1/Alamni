@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+{% block title %}Discussion index{% endblock %}
+
+{% block body %}
+    <h1>Discussion index</h1>   
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Adresse</th>
+                <th>Sujet</th>
+                <th>Destinataire</th>
+                <th>Contenu</th>
+                <th>Professeur</th>
+                <th>Role</th>
+                <th>Eleve</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for discussion in discussions %}
+            <tr>
+                <td>{{ discussion.id }}</td>
+                <td>{{ discussion.adresse }}</td>
+                <td>{{ discussion.sujet }}</td>
+                <td>{{ discussion.destinataire }}</td>
+                <td>{{ discussion.contenu }}</td>
+                <td>{{ discussion.professeur }}</td>
+                <td>{{ discussion.role }}</td>
+                <td>{{ discussion.eleve }}</td>
+                <td>
+                    <a href="{{ path('app_discussion_show', {'id': discussion.id}) }}">show</a>
+                    <a href="{{ path('app_discussion_edit', {'id': discussion.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_discussion_new') }}">Create new</a>
+{% endblock %}

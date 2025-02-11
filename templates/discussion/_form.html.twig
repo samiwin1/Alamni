@@ -1,0 +1,80 @@
+{% extends 'base_back.html.twig' %}
+{% block navbar %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block welc %}{% endblock %}
+{% block preloader %}{% endblock %}
+{% block main %}{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="col-md-6">
+        <div class="card shadow-lg p-4" style=" margin-top:50px ; width: 500px; background: #fff; border-radius: 10px;">
+            <fieldset>
+                <legend class="text-center text-primary mb-4" style="font-size: 24px;">Créer une nouvelle Discussion</legend>
+
+               {{ form_start(form, {
+                'action': path('app_discussion_new'),
+                 'method': 'POST',
+                  'attr': {'class': 'nice-form'}
+                }) }}
+                {% if form.vars.errors|length > 0 %}
+                     <div class="alert alert-danger">
+                     {{ form_errors(form) }}
+                     </div>
+                {% endif %}
+                <div class="mb-3">
+                    {{ form_label(form.adresse, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.adresse, { 'attr': {'placeholder': 'Votre email', 'class': 'form-control'} }) }}
+                    <div class="text-danger">{{ form_errors(form.adresse) }}</div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.sujet, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.sujet, { 'attr': {'placeholder': 'Votre sujet?', 'class': 'form-control'} }) }}
+                    <div class="text-danger">{{ form_errors(form.sujet) }}</div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.destinataire, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.destinataire, { 'attr': {'placeholder': 'Adresse email du destinataire', 'class': 'form-control'} }) }}
+                    <div class="text-danger">{{ form_errors(form.destinataire) }}</div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.contenu, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.contenu, { 'attr': {'placeholder': 'Contenu du message', 'class': 'form-control', 'rows': 4} }) }}
+                    <div class="text-danger">{{ form_errors(form.contenu) }}</div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.role, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.role, { 'attr': {'class': 'form-select'} }) }}
+                    <div class="text-danger">{{ form_errors(form.role) }}</div>
+                </div>
+
+                <div class="mb-3">
+                     {{ form_label(form.professeur, null, {'label_attr': {'class': 'form-label'}}) }}
+                     {{ form_widget(form.professeur, { 'attr': {'placeholder': 'Nom du professeur', 'class': 'form-control'} }) }}
+                 <div class="text-danger">{{ form_errors(form.professeur) }}</div>
+                </div>
+
+
+                <div class="mb-3">
+                    {{ form_label(form.eleve, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.eleve, { 'attr': {'class': 'form-control'} }) }}
+                    <div class="text-danger">{{ form_errors(form.eleve) }}</div>
+                </div>
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ path('app_discussion_index') }}" class="btn btn-secondary">Retour</a>
+
+                <div>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </div>
+
+                {{ form_end(form) }}
+            </fieldset>
+        </div>
+    </div>
+</div>
+{% endblock %}

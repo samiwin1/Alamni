@@ -14,10 +14,10 @@ class FrontController extends AbstractController
         return $this->render('base_front.html.twig'); 
     }
 
-    #[Route('/about', name: 'app_about')]
+    #[Route('/discussion', name: 'app_discussion')]
     public function about(): Response
     {
-        return $this->render('frontOffice/about.html.twig');
+        return $this->render('frontOffice/discussion.html.twig');
     }
 
     #[Route('/classes', name: 'app_classes')]
