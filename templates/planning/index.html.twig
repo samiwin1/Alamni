@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Planning Index</title>
+    <link rel="stylesheet" href="{{ asset('css/planning.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for a modern and clean design */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #343a40;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+        }
+
+        .btn-info:hover {
+            background-color: #117a8b;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .actions a {
+            margin-right: 8px;
+        }
+
+        .no-records {
+            text-align: center;
+            color: #777;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    {% block welc %}
+        <h1>Planning Index</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Seance</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Uploaded Date</th>
+                    <th>Modified Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for planning in plannings %}
+                <tr>
+                    <td>{{ planning.id }}</td>
+                    <td>{{ planning.name }}</td>
+                    <td>{{ planning.science }}</td>
+                    <td>{{ planning.startTime ? planning.startTime|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ planning.endTime ? planning.endTime|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ planning.uploadedDate ? planning.uploadedDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ planning.modifiedDate ? planning.modifiedDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td class="actions">
+                        <a href="{{ path('app_planning_show', {'id': planning.id}) }}" class="btn btn-info">Show</a>
+                        <a href="{{ path('app_planning_edit', {'id': planning.id}) }}" class="btn btn-warning">Edit</a>
+                        <form action="{{ path('app_planning_delete', {'id': planning.id}) }}" method="post" style="display: inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ planning.id) }}">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" class="no-records">No records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_planning_new') }}" class="btn btn-primary">Create New</a>
+    {% endblock %}
+</body>
+</html>

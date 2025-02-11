@@ -1,13 +1,49 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %} planning {% endblock %}
-{% block navbar %}{% endblock %}
-{% block sidebar %}{% endblock %}
-{% block welc %}{% endblock %}
-{% block preloader %}{% endblock %}
-{% block main %}{% endblock %}
-
+{% block title %}Planning{% endblock %}
 
 {% block content %}
-    
+   
+    <h1>Planning</h1>
+
+    <a href="{{ path('app_planning_new') }}" class="btn btn-primary">Create New</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Science</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Uploaded Date</th>
+                <th>Modified Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for planning in plannings %}
+            <tr>
+                <td>{{ planning.name }}</td>
+                <td>{{ planning.science }}</td>
+                <td>{{ planning.startTime ? planning.startTime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ planning.endTime ? planning.endTime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ planning.uploadedDate ? planning.uploadedDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ planning.modifiedDate ? planning.modifiedDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_planning_show', {'id': planning.id}) }}" class="btn btn-info">Show</a>
+                    <a href="{{ path('app_planning_edit', {'id': planning.id}) }}" class="btn btn-warning">Edit</a>
+                    <form action="{{ path('app_planning_delete', {'id': planning.id}) }}" method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ planning.id) }}">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" class="no-records">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
