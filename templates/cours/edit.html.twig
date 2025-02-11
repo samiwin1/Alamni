@@ -1,0 +1,98 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-header bg-gradient-primary text-white text-center py-4 rounded-top">
+                    <h3 class="fw-bold">
+                        <i class="fas fa-edit"></i> Modifier le Cours
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" action="{{ path('app_cours_edit', {'id': cour.id}) }}" class="needs-validation" novalidate>
+                        <table class="table table-borderless">
+                            {% for field in form %}
+                                <tr>
+                                    <td class="fw-semibold text-end align-middle" style="width: 30%;">{{ field.vars.label }}</td>
+                                    <td style="width: 70%;">{{ form_widget(field, {'attr': {'class': 'form-control shadow-sm rounded-3'}}) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4 w-100">
+                            <a href="{{ path('app_cours_index') }}" class="btn btn-outline-dark btn-sm rounded-pill px-3">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary-gradient btn-sm rounded-2 px-3">
+                                <i class="fas fa-save"></i> Modifier
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Dégradé uniforme pour l'en-tête et les boutons */
+        .bg-gradient-primary, .btn-primary-gradient {
+            background: linear-gradient(135deg, #4CAF50, #008CBA);
+            border: none;
+            color: white;
+        }
+
+        .btn-primary-gradient:hover {
+            background: linear-gradient(135deg, #45A049, #007BB5);
+        }
+
+        /* Effets visuels pour la carte */
+        .card {
+            animation: fadeInUp 0.8s ease-in-out;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Champs du formulaire */
+        .form-control {
+            transition: all 0.3s ease-in-out;
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: #008CBA;
+            box-shadow: 0px 0px 10px rgba(0, 140, 186, 0.3);
+        }
+
+        table {
+            width: 100%;
+        }
+
+        td {
+            padding: 8px 0;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+{% endblock %}

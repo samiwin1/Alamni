@@ -1,0 +1,74 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Détails du cours{% endblock %}
+
+{# Disable unnecessary sections but KEEP NAVBAR #}
+{% block hero %}{% endblock %}
+{% block call_to_action %}{% endblock %}
+{% block appointment %}{% endblock %}
+{% block testimonial %}{% endblock %}
+{% block team %}{% endblock %}
+{% block classes %}{% endblock %}
+{% block about %}{% endblock %}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-xxl py-5 page-header position-relative mb-5">
+        <div class="container py-5">
+            <h1 class="display-2 text-white animated slideInDown mb-4">Cours</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">Cours</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- cours Details Section Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="cours-details bg-light p-4 rounded shadow">
+                <h1 class="mb-4"><i class="bi bi-file-earmark-text"></i> Détails du cours</h1>
+
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th><i class="bi bi-hash"></i> ID</th>
+                            <td>{{ cour.id }}</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-card-heading"></i> Titre</th>
+                            <td>{{ cour.titre }}</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-card-text"></i> Contenu</th>
+                            <td>{{ cour.descrC }}</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-person"></i> matiere</th>
+                            <td>{{ cour.matiereC }}</td>
+                        </tr>
+                        <tr>
+                            <th><i class="bi bi-calendar"></i> Date de cour</th>
+                            <td>{{ cour.dateC|date('d/m/Y H:i') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="btn-group mt-4">
+                    <a href="{{ path('app_cours_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    </a>
+                    <a href="{{ path('app_cours_edit', {'id': cour.id}) }}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Modifier
+                    </a>
+                    {{ include('cours/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- cour Details Section End -->
+{% endblock %}

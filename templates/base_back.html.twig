@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="CodedThemes">
+    <meta name="keywords" content="Admin, Responsive, Bootstrap, Dashboard, Template">
+    <meta name="author" content="CodedThemes">
+   
+    <!-- Favicon -->
+   
+{% block css %}
+    <!-- Google Fonts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
+    <link rel="icon" href="{{ asset('back/images/favicon.ico') }}" type="image/x-icon">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="{{ asset('back/lib/animate/animate.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('back/lib/owlcarousel/assets/owl.carousel.min.css') }}">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link rel="stylesheet" href="{{ asset('back/css/bootstrap.min.css') }}">
+
+    <!-- Template Stylesheet -->
+    <link rel="stylesheet" href="{{ asset('back/css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+</head>
+
+<body>
+    <!-- Pre-loader start -->
+   <!-- {% block preloader %}
+    <div class="theme-loader">
+        <div class="ball-scale">
+            <div class='contain'>
+                {% for _ in 1..10 %}
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endblock %} -->
+    <!-- Pre-loader end -->
+
+    <!-- Navbar -->
+    {% block navbar %}
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <nav class="navbar header-navbar pcoded-header">
+                <div class="navbar-wrapper">
+                    <div class="navbar-logo">
+                        <a class="mobile-menu" id="mobile-collapse" href="#!">
+                            <i class="ti-menu"></i>
+                        </a>
+                        <a class="mobile-search morphsearch-search" href="#">
+                            <i class="ti-search"></i>
+                        </a>
+                        <a href="" class="text-decoration-none">
+                            <span style="font-family: 'Georgia', serif; font-weight: bold; font-size: 24px; color: white;">ALAMNI</span>
+                        </a>
+                        <a class="mobile-options">
+                            <i class="ti-more"></i>
+                        </a>
+                    </div>
+
+                    <div class="navbar-container container-fluid">
+                        <ul class="nav-left">
+                            <li>
+                                <div class="sidebar_toggle"><a href="javascript:void(0)"><i class="ti-menu"></i></a></div>
+                            </li>
+                            <li>
+                                <a href="#!" onclick="javascript:toggleFullScreen()">
+                                    <i class="ti-fullscreen"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav-right">
+                            <li class="header-notification">
+                                <a href="#!">
+                                    <i class="ti-bell"></i>
+                                    <span class="badge bg-c-pink"></span>
+                                </a>
+                                <ul class="show-notification">
+                                    <li>
+                                        <h6>Notifications</h6>
+                                        <label class="label label-danger">New</label>
+                                    </li>
+                                    <li>
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="{{ asset('back/images/avatar-4.jpg') }}" alt="User Image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">John Doe</h5>
+                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                <span class="notification-time">30 minutes ago</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="media">
+                                            <img class="d-flex align-self-center img-radius" src="{{ asset('back/images/avatar-3.jpg') }}" alt="User Image">
+                                            <div class="media-body">
+                                                <h5 class="notification-user">Joseph William</h5>
+                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                <span class="notification-time">30 minutes ago</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="user-profile header-notification">
+                                <a href="#!">
+                                    <img src="{{ asset('back/images/avatar-4.jpg') }}" class="img-radius" alt="User-Profile-Image">
+                                    <span>John Doe</span>
+                                    <i class="ti-angle-down"></i>
+                                </a>
+                                <ul class="show-notification profile-notification">
+                                    <li>
+                                        <a href="#!">
+                                            <i class="ti-settings"></i> Settings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <i class="ti-user"></i> Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="ti-email"></i> My Messages
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="ti-lock"></i> Lock Screen
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <i class="ti-layout-sidebar-left"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+    {% endblock %}
+    <!-- Navbar End -->
+
+    {% block main %}
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+    {% endblock %}
+            <!-- Sidebar -->
+            {% block sidebar %}
+            <nav class="pcoded-navbar">
+                <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+                <div class="pcoded-inner-navbar main-menu">
+                    <div class="">
+                        <div class="main-menu-header">
+                            <img class="img-40 img-radius" src="{{ asset('back/images/avatar-4.jpg') }}" alt="User-Profile-Image">
+                            <div class="user-details">
+                                <span>User</span>
+                                <span id="more-details">UX Designer<i class="ti-angle-down"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="pcoded-item pcoded-left-item">
+                        <li class="active">
+                            <a href="">
+                                <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+                                <span class="pcoded-mtext">Dashboard</span>
+                                <span class="pcoded-mcaret"></span>
+                            </a>
+                        </li>
+                        <li class="pcoded-hasmenu">
+                            <a href="javascript:void(0)">
+                                <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+                                <span class="pcoded-mtext">Management</span>
+                                <span class="pcoded-mcaret"></span>
+                            </a>
+                            <ul class="pcoded-submenu">
+                                <li>
+                                    <a href="">
+                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                        <span class="pcoded-mtext">User</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                        <span class="pcoded-mtext">Classes</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                        <span class="pcoded-mtext">Discussions</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                        <span class="pcoded-mtext">Publications</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                        <span class="pcoded-mtext">Club</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('app_cours_index') }}">
+                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                        <span class="pcoded-mtext">Cours</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                        <span class="pcoded-mtext">planning</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            {% endblock %}
+            <!-- Sidebar End -->
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                           
+                            {% block welc %}
+                            <div class="page-body">
+                                <h1></h1>
+                                {% block content %}{% endblock %}
+                            </div>
+                            {% endblock %}
+
+                            <div id="styleSelector"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    {% block footer %}
+    <div class="fixed-button">
+        <a href="https://codedthemes.com/item/guru-able-admin-template/" target="_blank" class="btn btn-md btn-primary">
+          <i class="fa fa-shopping-cart" aria-hidden="true"></i> Upgrade To Pro
+        </a>
+    </div>
+    {% endblock %}
+
+    </div>
+</div>
+
+<!-- Scripts -->
+{% block js %}
+<script type="text/javascript" src="{{ asset('back/js/jquery/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('back/js/jquery-ui/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('back/js/popper.js/popper.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('back/js/bootstrap/js/bootstrap.min.js') }}"></script>
+<!-- jquery slimscroll js -->
+<script type="text/javascript" src="{{ asset('back/js/jquery-slimscroll/jquery.slimscroll.js') }}"></script>
+<!-- modernizr js -->
+<script type="text/javascript" src="{{ asset('back/js/modernizr/modernizr.js') }}"></script>
+<!-- am chart -->
+<script src="{{ asset('back/pages/widget/amchart/amcharts.min.js') }}"></script>
+<script src="{{ asset('back/pages/widget/amchart/serial.min.js') }}"></script>
+<!-- Todo js -->
+<script type="text/javascript" src="{{ asset('back/pages/todo/todo.js') }}"></script>
+<!-- Custom js -->
+<script type="text/javascript" src="{{ asset('back/pages/dashboard/custom-dashboard.js') }}"></script>
+<script type="text/javascript" src="{{ asset('back/js/script.js') }}"></script>
+<script type="text/javascript" src="{{ asset('back/js/SmoothScroll.js') }}"></script>
+<script src="{{ asset('back/js/pcoded.min.js') }}"></script>
+<script src="{{ asset('back/js/demo-12.js') }}"></script>
+<script src="{{ asset('back/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+
+<script>
+var $window = $(window);
+var nav = $('.fixed-button');
+    $window.scroll(function(){
+        if ($window.scrollTop() >= 200) {
+         nav.addClass('active');
+     }
+     else {
+         nav.removeClass('active');
+     }
+ });
+</script>
+{% endblock %}
+
+</body>
+</html>
