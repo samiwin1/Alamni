@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\User;
@@ -24,17 +23,24 @@ class AdminController extends AbstractController
     #[Route('/admin', name: 'admin_dashboard')]
     public function dashboard(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier l'utilisateur connecté
         $user = $this->getLoggedInUser($request, $entityManager);
         if (!$user) {
             $this->addFlash('error', 'Veuillez vous connecter');
             return $this->redirectToRoute('login');
         }
+
+        // Si c'est un admin, récupérer la liste des utilisateurs
+        $users = [];
+        if ($user->getRole() === 'ROLE_ADMIN') {
+            $users = $entityManager->getRepository(User::class)->findAll();
+        }
         
         return $this->render('base_back.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'users' => $users
         ]);
     }
-
     #[Route('/login', name: 'login')]
     public function login(Request $request, EntityManagerInterface $entityManager): Response
     {

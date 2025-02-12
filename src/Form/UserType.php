@@ -18,18 +18,21 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // Nom
             ->add('nom', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Votre nom'
                 ]
             ])
+            // Prénom
             ->add('prenom', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Votre prénom'
                 ]
             ])
+            // Email
             ->add('email', EmailType::class, [
                 'attr' => [
                     'class' => 'form-control',
@@ -37,6 +40,7 @@ class UserType extends AbstractType
                 ]
             ]);
 
+        // Gestion conditionnelle du mot de passe
         if ($options['is_edit']) {
             $builder->add('mot_de_passe', PasswordType::class, [
                 'mapped' => false,
@@ -56,6 +60,7 @@ class UserType extends AbstractType
             ]);
         }
 
+        // Ajout du rôle uniquement pour la création
         if (!$options['is_edit']) {
             $builder->add('role', ChoiceType::class, [
                 'choices' => [
@@ -70,46 +75,49 @@ class UserType extends AbstractType
             ]);
         }
 
-        $builder
-            ->add('niveau', ChoiceType::class, [
-                'label' => 'Niveau d\'études',
-                'required' => false,
-                'choices' => [
-                    'Collège' => 'college',
-                    'Lycée' => 'lycee'
-                ],
-                'placeholder' => 'Sélectionnez un niveau',
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ])
-            ->add('nom_niveau', TextType::class, [
-                'label' => 'Nom du niveau',
-                'required' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Ex: 6ème, 5ème, 2nde, etc.'
-                ]
-            ])
-            ->add('photo', FileType::class, [
-                'label' => 'Photo de profil',
-                'mapped' => false,
-                'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2M',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/gif',
-                        ],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF)',
-                    ])
-                ],
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ]);
+        // Niveau d'études
+        $builder->add('niveau', ChoiceType::class, [
+            'label' => 'Niveau d\'études',
+            'required' => false,
+            'choices' => [
+                'Collège' => 'college',
+                'Lycée' => 'lycee'
+            ],
+            'placeholder' => 'Sélectionnez un niveau',
+            'attr' => [
+                'class' => 'form-control'
+            ]
+        ])
+        // Nom du niveau
+        ->add('nom_niveau', TextType::class, [
+            'label' => 'Nom du niveau',
+            'required' => false,
+            'attr' => [
+                'class' => 'form-control',
+                'placeholder' => 'Ex: 6ème, 5ème, 2nde, etc.'
+            ]
+        ])
+        // Photo de profil
+        ->add('photo', FileType::class, [
+            'label' => 'Photo de profil',
+            'mapped' => false,
+            'required' => false,
+            'constraints' => [
+                new File([
+                    'maxSize' => '2M',
+                    'mimeTypes' => [
+                        'image/jpeg',
+                        'image/png',
+                        'image/gif',
+                    ],
+                    'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF)',
+                ])
+            ],
+            'attr' => [
+                'class' => 'form-control',
+                'accept' => 'image/*' // Permet de filtrer les fichiers dans le sélecteur
+            ]
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -117,6 +125,12 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'is_edit' => false,
+            'validation_groups' => ['Default'], // Vous pouvez ajouter des groupes de validation si nécessaire
         ]);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'user'; // Définit le préfixe pour les noms des champs du formulaire
     }
 }
