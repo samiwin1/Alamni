@@ -209,4 +209,145 @@ class AdminController extends AbstractController
         $this->addFlash('success', 'Vous avez été déconnecté');
         return $this->redirectToRoute('login');
     }
+
+    #[Route('/user/{id}/modify', name: 'user_modify')]
+public function modifyUser(Request $request, EntityManagerInterface $entityManager, int $id): Response
+{
+    // Récupérer l'utilisateur connecté
+    $currentUser = $this->getLoggedInUser($request, $entityManager);
+    if (!$currentUser) {
+        $this->addFlash('error', 'Veuillez vous connecter');
+        return $this->redirectToRoute('login');
+    }
+
+    // Vérifier si l'utilisateur est un admin
+    if ($currentUser->getRole() !== 'ROLE_ADMIN') {
+        $this->addFlash('error', 'Accès non autorisé');
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    // Récupérer l'utilisateur à modifier
+    $userToModify = $entityManager->getRepository(User::class)->find($id);
+    if (!$userToModify) {
+        throw $this->createNotFoundException('Utilisateur non trouvé');
+    }
+
+    $form = $this->createForm(UserType::class, $userToModify, [
+        'is_edit' => true,
+    ]);
+    
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Gestion de la photo
+        $photoFile = $form->get('photo')->getData();
+        if ($photoFile) {
+            $imageContent = file_get_contents($photoFile->getPathname());
+            $base64Image = base64_encode($imageContent);
+            $userToModify->setPhoto($base64Image);
+        }
+
+        // Gestion du mot de passe
+        $newPassword = $form->get('mot_de_passe')->getData();
+        if (!empty($newPassword)) {
+            $userToModify->setMotDePasse(password_hash($newPassword, PASSWORD_DEFAULT));
+        }
+
+        $entityManager->flush();
+        $this->addFlash('success', 'Utilisateur modifié avec succès');
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    return $this->render('backOffice/user_modify.html.twig', [
+        'form' => $form->createView(),
+        'user' => $currentUser, // pour le menu
+        'userToModify' => $userToModify
+    ]);
+}
+#[Route('/user/{id}/delete', name: 'user_delete', methods: ['POST', 'DELETE'])]
+public function deleteUser(Request $request, EntityManagerInterface $entityManager, int $id): Response
+{
+    // Vérifier si l'utilisateur connecté est admin
+    $currentUser = $this->getLoggedInUser($request, $entityManager);
+    if (!$currentUser || $currentUser->getRole() !== 'ROLE_ADMIN') {
+        $this->addFlash('error', 'Accès non autorisé');
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    // Récupérer l'utilisateur à supprimer
+    $userToDelete = $entityManager->getRepository(User::class)->find($id);
+    if (!$userToDelete) {
+        throw $this->createNotFoundException('Utilisateur non trouvé');
+    }
+
+    // Vérifier le token CSRF
+    $token = $request->request->get('_token');
+    if (!$this->isCsrfTokenValid('delete'.$id, $token)) {
+        $this->addFlash('error', 'Token de sécurité invalide');
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    try {
+        // Ne pas permettre à un admin de se supprimer lui-même
+        if ($userToDelete->getId() === $currentUser->getId()) {
+            $this->addFlash('error', 'Vous ne pouvez pas supprimer votre propre compte');
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        // Supprimer l'utilisateur
+        $entityManager->remove($userToDelete);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Utilisateur supprimé avec succès');
+    } catch (\Exception $e) {
+        $this->addFlash('error', 'Une erreur est survenue lors de la suppression');
+    }
+
+    return $this->redirectToRoute('admin_dashboard');
+}
+#[Route('/user/add', name: 'user_add')]
+#[Route('/user/add', name: 'user_add')]
+public function addUser(Request $request, EntityManagerInterface $entityManager): Response
+{
+    // Vérifier l'utilisateur connecté
+    $currentUser = $this->getLoggedInUser($request, $entityManager);
+    if (!$currentUser || $currentUser->getRole() !== 'ROLE_ADMIN') {
+        $this->addFlash('error', 'Accès non autorisé');
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    $newUser = new User();
+    $form = $this->createForm(UserType::class, $newUser, [
+        'is_edit' => false
+    ]);
+    
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Gestion de la photo
+        $photoFile = $form->get('photo')->getData();
+        if ($photoFile) {
+            $imageContent = file_get_contents($photoFile->getPathname());
+            $base64Image = base64_encode($imageContent);
+            $newUser->setPhoto($base64Image);
+        }
+
+        // Hash du mot de passe
+        $newUser->setMotDePasse(password_hash($newUser->getMotDePasse(), PASSWORD_DEFAULT));
+        
+        // Date d'inscription
+        $newUser->setDateInscription(new \DateTime());
+
+        $entityManager->persist($newUser);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Utilisateur ajouté avec succès');
+        return $this->redirectToRoute('admin_dashboard');
+    }
+
+    return $this->render('backOffice/user_add.html.twig', [
+        'form' => $form->createView(),
+        'user' => $currentUser
+    ]);
+}
 }

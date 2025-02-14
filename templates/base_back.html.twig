@@ -206,12 +206,12 @@
     margin-top: 100px;
 ">
 																	<h5>Liste des Utilisateurs</h5>
-																	<div class="card-header-right">
-																		<a href="{{ path('app_signin') }}" class="btn btn-primary">
-																			<i class="ti-plus"></i>
-																			Ajouter
-																		</a>
-																	</div>
+																<div class="card-header-right">
+    <a href="{{ path('user_add') }}" class="btn btn-primary">
+        <i class="ti-plus"></i>
+        Ajouter
+    </a>
+</div>
 																</div>
 																<div class="card-block" style="
 																																				    margin-left: 360px;
@@ -255,15 +255,15 @@
 																							</td>
 																							<td>
 																								<div class="btn-group">
-																									<a href="{{ path('user_profile_edit', {'id': user.id}) }}" class="btn btn-info btn-sm">
-																										modifier
-																									</a>
-																									<form method="post" action="{{ path('user_profile_delete', {'id': user.id}) }}" style="display: inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
-																										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-																										<button class="btn btn-danger btn-sm">
-																											supprimer
-																										</button>
-																									</form>
+																									<!-- Dans votre tableau de bord, remplacez la ligne du lien "modifierrr" par : -->
+<a href="{{ path('user_modify', {'id': user.id}) }}" class="btn btn-info btn-sm">
+    modifierrr
+</a>
+																									<form method="post" action="{{ path('user_delete', {'id': user.id}) }}" style="display: inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" class="btn btn-danger btn-sm">supprimer</button>
+</form>
 																								</div>
 																							</td>
 																						</tr>
