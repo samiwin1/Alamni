@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Reclamation;
+use App\Form\ReclamationType;
+use App\Repository\ReclamationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,10 +16,10 @@ class FrontController extends AbstractController
         return $this->render('base_front.html.twig'); 
     }
 
-    #[Route('/discussion', name: 'app_discussion')]
+    #[Route('/reclamation', name: 'app_reclamation')]
     public function about(): Response
     {
-        return $this->render('frontOffice/discussion.html.twig');
+        return $this->render('frontOffice/reclamation.html.twig');
     }
 
     #[Route('/classes', name: 'app_classes')]
@@ -61,4 +63,13 @@ class FrontController extends AbstractController
     {
         return $this->render('frontOffice/404.html.twig');
     }
+
+    #[Route('/front/reclamation/{id}', name: 'app_reclamation_front_show', methods: ['GET'])]
+    public function showFront(Reclamation $reclamation): Response
+    {
+          return $this->render('frontOffice/reclamation_show.html.twig', [
+        'reclamation' => $reclamation,
+    ]);
+}
+
 }

@@ -1,0 +1,63 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Mes Réclamations{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Mes Réclamations</h1>
+
+    <p class="text-center">Affichage des réclamations pour : <strong>{{ userEmail }}</strong></p>
+
+    {% if reclamations is empty %}
+        <div class="alert alert-warning text-center">Vous n'avez soumis aucune réclamation.</div>
+    {% else %}
+        <table class="table table-bordered mt-4">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Objet</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reclamation in reclamations %}
+                    <tr>
+                        <td>{{ reclamation.id }}</td>
+                        <td>{{ reclamation.objet }}</td>
+                        <td>{{ reclamation.description }}</td>
+                        <td>
+                            {% if reclamation.status == 'En attente' %}
+                                <span class="badge bg-warning text-dark">En attente</span>
+                            {% elseif reclamation.status == 'En cours' %}
+                                <span class="badge bg-primary">En cours</span>
+                            {% else %}
+                                <span class="badge bg-success">Résolue</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ reclamation.dateSoumission|date('d/m/Y H:i') }}</td>
+                        <td>
+                            <a href="{{ path('app_reclamation_front_show', {'id': reclamation.id}) }}" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye"></i> Voir
+                            </a>
+                            <a href="{{ path('app_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                            <form method="post" action="{{ path('app_reclamation_delete', {'id': reclamation.id}) }}" 
+                                  style="display:inline;" 
+                                  onsubmit="return confirm('Voulez-vous vraiment supprimer cette réclamation ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

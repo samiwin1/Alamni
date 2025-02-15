@@ -1,6 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Discussions- Kider{% endblock %}
+{% block title %}new reclamation{% endblock %}
 
 {# Disable unnecessary sections from the base template #}
 {% block hero %}{% endblock %}
@@ -11,8 +11,13 @@
 {% block about %}{% endblock %}
 {% block team %}{% endblock %}
 
-
-
 {% block content %}
-
+    <div class="container mt-5">
+        <h1 class="text-center">Envoyer une Réclamation</h1>
+        <div class="card p-4 shadow">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}
