@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>New Devoir</title>
+
+{% block body %}
+    <h1>Create new Devoir</h1>
+
+    {{ include('devoir/_form.html.twig') }}
+
+    <a href="{{ path('app_devoir_index') }}">back to list</a>
+{% endblock %}

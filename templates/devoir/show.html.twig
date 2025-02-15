@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<title>Devoir</title>
+
+{% block body %}
+    <h1>Devoir</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ devoir.id }}</td>
+            </tr>
+            <tr>
+                <th>TitreD</th>
+                <td>{{ devoir.titreD }}</td>
+            </tr>
+            <tr>
+                <th>DescrD</th>
+                <td>{{ devoir.descrD }}</td>
+            </tr>
+            <tr>
+                <th>DateD</th>
+                <td>{{ devoir.dateD ? devoir.dateD|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>{{ devoir.comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_devoir_index') }}">back to list</a>
+
+    <a href="{{ path('app_devoir_edit', {'id': devoir.id}) }}">edit</a>
+
+    {{ include('devoir/_delete_form.html.twig') }}
+{% endblock %}

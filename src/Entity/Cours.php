@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CoursRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,6 +28,17 @@ class Cours
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateC = null;
 
+    /**
+     * @var Collection<int, Devoir>
+     */
+    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Devoir::class, cascade: ['remove'])]
+    private Collection $devoirs;
+
+    public function __construct()
+    {
+        $this->devoirs = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -39,7 +52,6 @@ class Cours
     public function setTitre(string $titre): static
     {
         $this->titre = $titre;
-
         return $this;
     }
 
@@ -51,7 +63,6 @@ class Cours
     public function setDescrC(string $descrC): static
     {
         $this->descrC = $descrC;
-
         return $this;
     }
 
@@ -63,7 +74,6 @@ class Cours
     public function setMatiereC(string $matiereC): static
     {
         $this->matiereC = $matiereC;
-
         return $this;
     }
 
@@ -75,6 +85,35 @@ class Cours
     public function setDateC(\DateTimeInterface $dateC): static
     {
         $this->dateC = $dateC;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Devoir>
+     */
+    public function getDevoirs(): Collection
+    {
+        return $this->devoirs;
+    }
+
+    public function addDevoir(Devoir $devoir): static
+    {
+        if (!$this->devoirs->contains($devoir)) {
+            $this->devoirs->add($devoir);
+            $devoir->setCours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevoir(Devoir $devoir): static
+    {
+        if ($this->devoirs->removeElement($devoir)) {
+            // Set the owning side to null (unless already changed)
+            if ($devoir->getCours() === $this) {
+                $devoir->setCours(null);
+            }
+        }
 
         return $this;
     }
