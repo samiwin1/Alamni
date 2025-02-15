@@ -1,0 +1,303 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Sign Up
+{% endblock %}
+
+{% block content %}
+	<style>
+		.pcoded {
+			opacity: 0 !important;
+			visibility: hidden !important;
+		}
+		.login {
+			min-height: 100vh;
+			background: url('{{ asset('back/images/bg.jpg') }}') no-repeat center center fixed;
+			background-size: cover;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.auth-box {
+			background: rgba(255, 255, 255, 0.95);
+			border-radius: 10px;
+			padding: 30px;
+			box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+			max-width: 450px;
+			width: 100%;
+			margin: 20px auto;
+		}
+		.preview-image {
+			width: 100px;
+			height: 100px;
+			border-radius: 50%;
+			object-fit: cover;
+			margin: 10px auto;
+			border: 3px solid #fff;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		}
+		.form-control {
+			height: 45px;
+			margin-bottom: 15px;
+		}
+		.btn-primary {
+			height: 45px;
+			font-size: 16px;
+		}
+		.logo-container {
+			margin-bottom: 20px;
+		}
+		.logo-container img {
+			max-width: 150px;
+		}
+		.form-group select {
+			height: 45px;
+			padding: 0 15px;
+			width: 100%;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			background-color: white;
+			font-size: 14px;
+			margin-bottom: 15px;
+		}
+		.form-group select:focus {
+			border-color: #4099ff;
+			box-shadow: 0 0 0 0.2rem rgba(64, 153, 255, 0.25);
+		}
+		#nomNiveauGroup {
+			transition: all 0.3s ease;
+		}
+		.custom-file {
+			margin-bottom: 15px;
+		}
+		.custom-file-label {
+			height: 45px;
+			line-height: 2.5;
+		}
+		.custom-control {
+			margin-bottom: 15px;
+		}
+		.alert {
+			padding: 10px;
+			margin-bottom: 15px;
+			border-radius: 4px;
+		}
+		.alert-danger {
+			color: #721c24;
+			background-color: #f8d7da;
+			border-color: #f5c6cb;
+		}
+		.form-control {
+			width: 100%;
+		}
+	</style>
+
+	<section class="login">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6" style="max-width: 100%;">
+					<div class="auth-box">
+						<div class="logo-container text-center">
+							<img src="{{ asset('back/images/logo.png') }}" alt="logo" class="img-fluid">
+						</div>
+						<h3 class="text-center mb-4">Créer un compte</h3>
+
+						{{ form_start(form, {'attr': {'id': 'signupForm'}}) }}
+
+						{# Photo #}
+						<div class="form-group text-center">
+							<div id="imagePreview" style="display: none;">
+								<img src="" alt="Aperçu" class="preview-image">
+							</div>
+							<div class="custom-file">
+								{{ form_widget(form.photo, {
+                                    'attr': {
+                                        'class': 'custom-file-input',
+                                        'id': 'photoInput',
+                                        'accept': 'image/*'
+                                    }
+                                }) }}
+								<label class="custom-file-label" for="photoInput">Choisir une photo</label>
+							</div>
+							{{ form_errors(form.photo) }}
+						</div>
+
+						{# Nom #}
+						<div class="form-group">
+							{{ form_widget(form.nom, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre nom'
+                                }
+                            }) }}
+							{{ form_errors(form.nom) }}
+						</div>
+
+						{# Prénom #}
+						<div class="form-group">
+							{{ form_widget(form.prenom, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre prénom'
+                                }
+                            }) }}
+							{{ form_errors(form.prenom) }}
+						</div>
+
+						{# Email #}
+						<div class="form-group">
+							{{ form_widget(form.email, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre email'
+                                }
+                            }) }}
+							{{ form_errors(form.email) }}
+						</div>
+
+						{# Mot de passe #}
+						<div class="form-group">
+							{{ form_widget(form.mot_de_passe, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Mot de passe (8 caractères minimum)'
+                                }
+                            }) }}
+							{{ form_errors(form.mot_de_passe) }}
+						</div>
+
+						{# Role #}
+						<div class="form-group">
+							{{ form_widget(form.role, {
+                                'attr': {
+                                    'class': 'form-control'
+                                }
+                            }) }}
+							{{ form_errors(form.role) }}
+						</div>
+
+						{# Niveau #}
+						<div class="form-group">
+							{{ form_widget(form.niveau, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Sélectionnez votre niveau'
+                                }
+                            }) }}
+							{{ form_errors(form.niveau) }}
+						</div>
+
+						{# Nom du niveau #}
+						<div class="form-group" id="nomNiveauGroup" style="width:100%;">
+							{{ form_widget(form.nom_niveau, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Précisez votre niveau (ex: 6ème, 2nde...)'
+                                }
+                            }) }}
+							{{ form_errors(form.nom_niveau) }}
+						</div>
+
+						<div class="form-group">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="terms" required>
+								<label class="custom-control-label" for="terms">
+									J'accepte les
+									<a href="#">conditions d'utilisation</a>
+								</label>
+							</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary btn-block">Créer Mon Compte</button>
+
+						<div class="text-center mt-4">
+							<p>Vous avez déjà un compte ?
+								<a href="{{ path('login') }}">Se connecter</a>
+							</p>
+						</div>
+
+						{{ form_end(form) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block js %}
+	{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const photoInput = document.getElementById('photoInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = imagePreview.querySelector('img');
+    const fileLabel = document.querySelector('.custom-file-label');
+    const niveauSelect = document.querySelector('[name$="[niveau]"]');
+    const nomNiveauGroup = document.getElementById('nomNiveauGroup');
+    const roleSelect = document.querySelector('[name$="[role]"]');
+
+    // ... (autre code pour la gestion des photos)
+
+    // Fonction modifiée pour afficher les champs pour ROLE_ELEVE et ROLE_ADMIN
+    function toggleNomNiveau() {
+        const isEleveOrAdmin = roleSelect.value === 'ROLE_ELEVE' ;
+        
+        // Gestion du select niveau
+        niveauSelect.closest('.form-group').style.display = isEleveOrAdmin ? 'block' : 'none';
+        
+        // Gestion du champ nom_niveau
+        if (isEleveOrAdmin && niveauSelect.value) {
+            nomNiveauGroup.style.display = 'block';
+        } else if (!isEleveOrAdmin) {
+            nomNiveauGroup.style.display = 'none';
+        }
+
+        // Réinitialisation des champs si ce n'est ni un élève ni un admin
+        if (!isEleveOrAdmin) {
+            niveauSelect.value = '';
+            document.querySelector('[name$="[nom_niveau]"]').value = '';
+        }
+    }
+
+    // Écouteurs d'événements
+    niveauSelect.addEventListener('change', toggleNomNiveau);
+    roleSelect.addEventListener('change', toggleNomNiveau);
+
+    // Validation du formulaire
+    form.addEventListener('submit', function(e) {
+        const isEleveOrAdmin = roleSelect.value === 'ROLE_ELEVE' || roleSelect.value === 'ROLE_ADMIN';
+        
+        // Validation du mot de passe
+        const password = form.querySelector('[type="password"]');
+        if (password.value.length < 8) {
+            e.preventDefault();
+            alert('Le mot de passe doit contenir au moins 8 caractères');
+            return;
+        }
+
+        // Validation des champs niveau pour les élèves et admins
+        if (isEleveOrAdmin) {
+            if (!niveauSelect.value) {
+                e.preventDefault();
+                alert('Veuillez sélectionner un niveau d\'études');
+                return;
+            }
+            
+            if (!form.querySelector('[name$="[nom_niveau]"]').value) {
+                e.preventDefault();
+                alert('Veuillez préciser votre niveau');
+                return;
+            }
+        }
+
+        if (!document.getElementById('terms').checked) {
+            e.preventDefault();
+            alert('Veuillez accepter les conditions d\'utilisation');
+            return;
+        }
+    });
+
+    // État initial
+    toggleNomNiveau();
+});
+</script>
+{% endblock %}
