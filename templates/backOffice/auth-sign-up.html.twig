@@ -1,104 +1,51 @@
-{% extends 'base_back.html.twig' %}
+{% extends 'base_front.html.twig' %}
 
-{% block title %}Sign Up
+{% block title %}Connexion{% endblock %}
+
+{% block hero %}{% endblock %}
+{% block call_to_action %}{% endblock %}
+{% block appointment %}{% endblock %}
+{% block testimonial %}{% endblock %}
+{% block team %}{% endblock %}
+{% block classes %}{% endblock %}
+{% block about %}{% endblock %}
+   
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+        <a href="{{ path('app_home') }}" class="navbar-brand">
+            <h1 class="m-0 text-primary"><i class="fa fa-book-reader me-3"></i>Kider</h1>
+        </a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav mx-auto">
+                <a href="{{ path('app_home') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_home' %}active{% endif %}">Home</a>
+                <a href="{{ path('app_about') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_about' %}active{% endif %}">About Us</a>
+                <a href="{{ path('app_classes') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_classes' %}active{% endif %}">Classes</a>
+           
+                <a href="{{ path('app_contact') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_contact' %}active{% endif %}">Contact Us</a>
+            </div>
+            <a href="login" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">Join Us<i class="fa fa-arrow-right ms-3"></i></a>
+        </div>
+    </nav>
 {% endblock %}
 
 {% block content %}
-	<style>
-		.pcoded {
-			opacity: 0 !important;
-			visibility: hidden !important;
-		}
-		.login {
-			min-height: 100vh;
-			background: url('{{ asset('back/images/bg.jpg') }}') no-repeat center center fixed;
-			background-size: cover;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-		.auth-box {
-			background: rgba(255, 255, 255, 0.95);
-			border-radius: 10px;
-			padding: 30px;
-			box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-			max-width: 450px;
-			width: 100%;
-			margin: 20px auto;
-		}
-		.preview-image {
-			width: 100px;
-			height: 100px;
-			border-radius: 50%;
-			object-fit: cover;
-			margin: 10px auto;
-			border: 3px solid #fff;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-		}
-		.form-control {
-			height: 45px;
-			margin-bottom: 15px;
-		}
-		.btn-primary {
-			height: 45px;
-			font-size: 16px;
-		}
-		.logo-container {
-			margin-bottom: 20px;
-		}
-		.logo-container img {
-			max-width: 150px;
-		}
-		.form-group select {
-			height: 45px;
-			padding: 0 15px;
-			width: 100%;
-			border: 1px solid #ddd;
-			border-radius: 4px;
-			background-color: white;
-			font-size: 14px;
-			margin-bottom: 15px;
-		}
-		.form-group select:focus {
-			border-color: #4099ff;
-			box-shadow: 0 0 0 0.2rem rgba(64, 153, 255, 0.25);
-		}
-		#nomNiveauGroup {
-			transition: all 0.3s ease;
-		}
-		.custom-file {
-			margin-bottom: 15px;
-		}
-		.custom-file-label {
-			height: 45px;
-			line-height: 2.5;
-		}
-		.custom-control {
-			margin-bottom: 15px;
-		}
-		.alert {
-			padding: 10px;
-			margin-bottom: 15px;
-			border-radius: 4px;
-		}
-		.alert-danger {
-			color: #721c24;
-			background-color: #f8d7da;
-			border-color: #f5c6cb;
-		}
-		.form-control {
-			width: 100%;
-		}
-	</style>
+	   <div class="container-xxl py-5 page-header position-relative text-center">
+        <div class="container py-5">
+            <h1 class="display-2 text-white animated slideInDown mb-4">Cree un compte</h1>
+           
+        </div>
+        <div class="wave-bottom"></div> {# Curved bottom effect #}
+    </div>
 
 	<section class="login">
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-md-6" style="max-width: 100%;">
-					<div class="auth-box">
-						<div class="logo-container text-center">
-							<img src="{{ asset('back/images/logo.png') }}" alt="logo" class="img-fluid">
-						</div>
+		  <div class="container d-flex align-items-center justify-content-center min-vh-80">
+        <div class="login-card p-5 shadow-lg rounded-4 bg-white">
+			
+					 <div class="text-center">
+					
 						<h3 class="text-center mb-4">Créer un compte</h3>
 
 						{{ form_start(form, {'attr': {'id': 'signupForm'}}) }}
@@ -120,7 +67,7 @@
 							</div>
 							{{ form_errors(form.photo) }}
 						</div>
-
+<br>
 						{# Nom #}
 						<div class="form-group">
 							{{ form_widget(form.nom, {
@@ -131,7 +78,7 @@
                             }) }}
 							{{ form_errors(form.nom) }}
 						</div>
-
+<br>
 						{# Prénom #}
 						<div class="form-group">
 							{{ form_widget(form.prenom, {
@@ -142,7 +89,7 @@
                             }) }}
 							{{ form_errors(form.prenom) }}
 						</div>
-
+<br>
 						{# Email #}
 						<div class="form-group">
 							{{ form_widget(form.email, {
@@ -153,7 +100,7 @@
                             }) }}
 							{{ form_errors(form.email) }}
 						</div>
-
+<br>
 						{# Mot de passe #}
 						<div class="form-group">
 							{{ form_widget(form.mot_de_passe, {
@@ -164,7 +111,7 @@
                             }) }}
 							{{ form_errors(form.mot_de_passe) }}
 						</div>
-
+<br>
 						{# Role #}
 						<div class="form-group">
 							{{ form_widget(form.role, {
@@ -175,7 +122,7 @@
 							{{ form_errors(form.role) }}
 						</div>
 
-						{# Niveau #}
+<br>						{# Niveau #}
 						<div class="form-group">
 							{{ form_widget(form.niveau, {
                                 'attr': {
@@ -186,7 +133,7 @@
 							{{ form_errors(form.niveau) }}
 						</div>
 
-						{# Nom du niveau #}
+<br>						{# Nom du niveau #}
 						<div class="form-group" id="nomNiveauGroup" style="width:100%;">
 							{{ form_widget(form.nom_niveau, {
                                 'attr': {
@@ -224,80 +171,98 @@
 {% endblock %}
 
 {% block js %}
-	{{ parent() }}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const photoInput = document.getElementById('photoInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const previewImage = imagePreview.querySelector('img');
-    const fileLabel = document.querySelector('.custom-file-label');
-    const niveauSelect = document.querySelector('[name$="[niveau]"]');
-    const nomNiveauGroup = document.getElementById('nomNiveauGroup');
-    const roleSelect = document.querySelector('[name$="[role]"]');
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sélection des éléments du formulaire
+            const form = document.getElementById('signupForm');
+            const photoInput = document.getElementById('photoInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImage = imagePreview.querySelector('img');
+            const fileLabel = document.querySelector('.custom-file-label');
+            const roleSelect = document.querySelector('select[name="user[role]"]');
+            const niveauSelect = document.querySelector('select[name="user[niveau]"]');
+            const nomNiveauInput = document.querySelector('input[name="user[nom_niveau]"]');
+            const niveauGroup = niveauSelect.closest('.form-group');
+            const nomNiveauGroup = nomNiveauInput.closest('.form-group');
 
-    // ... (autre code pour la gestion des photos)
-
-    // Fonction modifiée pour afficher les champs pour ROLE_ELEVE et ROLE_ADMIN
-    function toggleNomNiveau() {
-        const isEleveOrAdmin = roleSelect.value === 'ROLE_ELEVE' ;
-        
-        // Gestion du select niveau
-        niveauSelect.closest('.form-group').style.display = isEleveOrAdmin ? 'block' : 'none';
-        
-        // Gestion du champ nom_niveau
-        if (isEleveOrAdmin && niveauSelect.value) {
-            nomNiveauGroup.style.display = 'block';
-        } else if (!isEleveOrAdmin) {
-            nomNiveauGroup.style.display = 'none';
-        }
-
-        // Réinitialisation des champs si ce n'est ni un élève ni un admin
-        if (!isEleveOrAdmin) {
-            niveauSelect.value = '';
-            document.querySelector('[name$="[nom_niveau]"]').value = '';
-        }
-    }
-
-    // Écouteurs d'événements
-    niveauSelect.addEventListener('change', toggleNomNiveau);
-    roleSelect.addEventListener('change', toggleNomNiveau);
-
-    // Validation du formulaire
-    form.addEventListener('submit', function(e) {
-        const isEleveOrAdmin = roleSelect.value === 'ROLE_ELEVE' || roleSelect.value === 'ROLE_ADMIN';
-        
-        // Validation du mot de passe
-        const password = form.querySelector('[type="password"]');
-        if (password.value.length < 8) {
-            e.preventDefault();
-            alert('Le mot de passe doit contenir au moins 8 caractères');
-            return;
-        }
-
-        // Validation des champs niveau pour les élèves et admins
-        if (isEleveOrAdmin) {
-            if (!niveauSelect.value) {
-                e.preventDefault();
-                alert('Veuillez sélectionner un niveau d\'études');
-                return;
+            // Gestion de la prévisualisation de la photo
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImage.src = e.target.result;
+                            imagePreview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                        fileLabel.textContent = file.name;
+                    } else {
+                        imagePreview.style.display = 'none';
+                        fileLabel.textContent = 'Choisir une photo';
+                    }
+                });
             }
-            
-            if (!form.querySelector('[name$="[nom_niveau]"]').value) {
-                e.preventDefault();
-                alert('Veuillez préciser votre niveau');
-                return;
+
+            // Fonction pour gérer l'affichage des champs de niveau
+            function toggleNiveauFields() {
+                const isEleve = roleSelect.value === 'ROLE_ELEVE';
+                
+                // Afficher/masquer les champs de niveau
+                niveauGroup.style.display = isEleve ? 'block' : 'none';
+                nomNiveauGroup.style.display = isEleve ? 'block' : 'none';
+
+                // Réinitialiser les valeurs si ce n'est pas un élève
+                if (!isEleve) {
+                    niveauSelect.value = '';
+                    nomNiveauInput.value = '';
+                }
             }
-        }
 
-        if (!document.getElementById('terms').checked) {
-            e.preventDefault();
-            alert('Veuillez accepter les conditions d\'utilisation');
-            return;
-        }
-    });
+            // Écouter les changements sur le select du rôle
+            if (roleSelect) {
+                roleSelect.addEventListener('change', toggleNiveauFields);
+            }
 
-    // État initial
-    toggleNomNiveau();
-});
-</script>
+            // Validation du formulaire
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Validation du mot de passe
+                    const password = form.querySelector('input[name="user[mot_de_passe]"]');
+                    if (password && password.value.length < 8) {
+                        e.preventDefault();
+                        alert('Le mot de passe doit contenir au moins 8 caractères');
+                        return;
+                    }
+
+                    // Validation des champs de niveau pour les élèves
+                    if (roleSelect && roleSelect.value === 'ROLE_ELEVE') {
+                        if (!niveauSelect.value) {
+                            e.preventDefault();
+                            alert('Veuillez sélectionner un niveau d\'études');
+                            return;
+                        }
+                        
+                        if (!nomNiveauInput.value) {
+                            e.preventDefault();
+                            alert('Veuillez préciser votre niveau');
+                            return;
+                        }
+                    }
+
+                    // Validation des conditions d'utilisation
+                    const terms = document.getElementById('terms');
+                    if (terms && !terms.checked) {
+                        e.preventDefault();
+                        alert('Veuillez accepter les conditions d\'utilisation');
+                        return;
+                    }
+                });
+            }
+
+            // Initialisation de l'état des champs de niveau
+            toggleNiveauFields();
+        });
+    </script>
 {% endblock %}

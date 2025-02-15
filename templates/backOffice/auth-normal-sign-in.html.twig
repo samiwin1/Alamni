@@ -1,91 +1,167 @@
-{% extends 'base_back.html.twig' %}
+{% extends 'base_front.html.twig' %}
 
-{% block title %}Sign In{% endblock %}
+{% block title %}Connexion{% endblock %}
 
-{% block navbar %}{% endblock %}
-{% block sidebar %}{% endblock %}
-{% block welc %}{% endblock %}
-{% block preloader %}{% endblock %}
-{% block main %}{% endblock %}
-
-{% block content %}
-    <section class="login p-fixed d-flex text-center bg-primary common-img-bg" style='    justify-content: center;
-'>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="login-card card-block auth-body mr-auto ml-auto">
-                        {% for label, messages in app.flashes %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ label }}">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-
-                        <form class="md-float-material" method="post" action="{{ path('login') }}">
-                            <div class="text-center">
-                                <img src="{{ asset('back/images/auth/logo-dark.png') }}" alt="logo.png">
-                            </div>
-                            <div class="auth-box">
-                                <div class="row m-b-20">
-                                    <div class="col-md-12">
-                                        <h3 class="text-left txt-primary">Sign In</h3>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="input-group">
-                                    <input type="email" name="_username" class="form-control" placeholder="Your Email Address" required>
-                                    <span class="md-line"></span>
-                                </div>
-                                <div class="input-group">
-                                    <input type="password" name="_password" class="form-control" placeholder="Password" required>
-                                    <span class="md-line"></span>
-                                </div>
-                                <div class="row m-t-30">
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign in</button>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <a href="{{ path('app_signin') }}" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign up</a>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <p class="text-inverse text-left m-b-0">Thank you.</p>
-                                        <p class="text-inverse text-left"><b>Your Authentication Team</b></p>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <img src="{{ asset('back/images/auth/Logo-small-bottom.png') }}" alt="small-logo.png">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+{% block hero %}{% endblock %}
+{% block call_to_action %}{% endblock %}
+{% block appointment %}{% endblock %}
+{% block testimonial %}{% endblock %}
+{% block team %}{% endblock %}
+{% block classes %}{% endblock %}
+{% block about %}{% endblock %}
+   
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+        <a href="{{ path('app_home') }}" class="navbar-brand">
+            <h1 class="m-0 text-primary"><i class="fa fa-book-reader me-3"></i>Kider</h1>
+        </a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav mx-auto">
+                <a href="{{ path('app_home') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_home' %}active{% endif %}">Home</a>
+                <a href="{{ path('app_about') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_about' %}active{% endif %}">About Us</a>
+                <a href="{{ path('app_classes') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_classes' %}active{% endif %}">Classes</a>
+           
+                <a href="{{ path('app_contact') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_contact' %}active{% endif %}">Contact Us</a>
             </div>
+            <a href="login" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">Join Us<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
-    </section>
+    </nav>
 {% endblock %}
 
-{% block css %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('back/css/style.css') }}">
+
+{% block content %}
+    <!-- Page Header -->
+    <div class="container-xxl py-5 page-header position-relative text-center">
+        <div class="container py-5">
+            <h1 class="display-2 text-white animated slideInDown mb-4">Connexion</h1>
+           
+        </div>
+        <div class="wave-bottom"></div> {# Curved bottom effect #}
+    </div>
+
+    <!-- Login Section -->
+    <div class="container d-flex align-items-center justify-content-center min-vh-80">
+        <div class="login-card p-5 shadow-lg rounded-4 bg-white">
+            <div class="text-center">
+                <h3 class="title text-primary fw-bold">Se Connecter</h3>
+                <p class="text-muted">Veuillez entrer vos identifiants</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} text-center rounded-3">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <!-- Login Form -->
+            <form method="post" action="{{ path('login') }}">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Email</label>
+                    <input type="email" name="_username" class="form-control p-3 rounded-3" placeholder="Votre email" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Mot de passe</label>
+                    <input type="password" name="_password" class="form-control p-3 rounded-3" placeholder="Votre mot de passe" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 mt-3">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+                <a href="{{ path('app_signin') }}" class="btn btn-outline-secondary w-100 py-2 rounded-3 mt-2">
+                    <i class="fas fa-user-plus"></i> S'inscrire
+                </a>
+            </form>
+
+            <div class="text-center text-muted mt-4">
+                <small>Merci d'utiliser notre plateforme.</small>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
     <style>
-        .alert {
-            margin: 10px;
-            padding: 10px;
-            border-radius: 4px;
+        /* Centering Fix */
+        .min-vh-80 {
+            min-height: 80vh; /* Keeps login form centered */
         }
-        .alert-error {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
+
+        /* Login Card */
+        .login-card {
+            width: 420px;
+            text-align: center;
+            border: 2px solid #FEECE2;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.6s ease-in-out;
         }
-        .alert-success {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
+
+        /* Form Styling */
+        .form-control {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #FEC89A;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .form-control::placeholder {
+            color: #999;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: #FF6B6B;
+            border: none;
+            transition: 0.3s ease-in-out;
+            font-size: 16px;
+        }
+
+        .btn-primary:hover {
+            background: #EE5253;
+            transform: scale(1.03);
+        }
+
+        .btn-outline-secondary {
+            border: 1px solid #FF6B6B;
+            color: #FF6B6B;
+            font-size: 16px;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #FF6B6B;
+            color: white;
+            transform: scale(1.03);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 768px) {
+            .login-card {
+                width: 90%;
+                padding: 20px;
+            }
+            .form-control {
+                font-size: 14px;
+            }
+            .btn {
+                font-size: 14px;
+            }
         }
     </style>
 {% endblock %}

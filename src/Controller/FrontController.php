@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\PlanningRepository;
 
-
 class FrontController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
@@ -28,7 +27,6 @@ class FrontController extends AbstractController
         return $this->render('frontOffice/classes.html.twig'); // No data passed for now
     }
 
-  
     #[Route('/facility', name: 'app_facility')]
     public function facility(PlanningRepository $planningRepository): Response
     {
@@ -40,7 +38,6 @@ class FrontController extends AbstractController
         ]);
     }
     
-
     #[Route('/team', name: 'app_team')]
     public function team(): Response
     {

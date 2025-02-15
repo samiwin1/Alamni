@@ -1,6 +1,13 @@
 {% extends 'base_back.html.twig' %}
 
 {% block welc %}
+<style>
+.niveau-etudes-wrapper , .nom-niveau-wrapper{
+display:none;
+opacity:0;
+visibility:hidden;
+} 
+    </style>
     <div class="page-body">
         <div class="row">
             <div class="col-sm-12">
@@ -26,12 +33,10 @@
                                 {{ form_label(form.mot_de_passe) }}
                                 {{ form_widget(form.mot_de_passe, {'attr': {'class': 'form-control'}}) }}
                             </div>
-                            {% if form.role is defined %}
-                            <div class="form-group">
-                                {{ form_label(form.role) }}
-                                {{ form_widget(form.role, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                            {% endif %}
+                            
+
+                       
+
                             <div class="form-group">
                                 {{ form_label(form.photo) }}
                                 {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}

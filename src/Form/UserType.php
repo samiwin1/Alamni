@@ -76,27 +76,34 @@ class UserType extends AbstractType
         }
 
         // Niveau d'études
-        $builder->add('niveau', ChoiceType::class, [
-            'label' => 'Niveau d\'études',
-            'required' => false,
-            'choices' => [
-                'Collège' => 'college',
-                'Lycée' => 'lycee'
-            ],
-            'placeholder' => 'Sélectionnez un niveau',
-            'attr' => [
-                'class' => 'form-control'
-            ]
-        ])
-        // Nom du niveau
-        ->add('nom_niveau', TextType::class, [
-            'label' => 'Nom du niveau',
-            'required' => false,
-            'attr' => [
-                'class' => 'form-control',
-                'placeholder' => 'Ex: 6ème, 5ème, 2nde, etc.'
-            ]
-        ])
+   // Niveau d'études
+$builder->add('niveau', ChoiceType::class, [
+    'label' => 'Niveau d\'études',
+    'required' => false,
+    'choices' => [
+        'Collège' => 'college',
+        'Lycée' => 'lycee'
+    ],
+    'placeholder' => 'Sélectionnez un niveau',
+    'attr' => [
+        'class' => 'form-control'
+    ],
+    'row_attr' => [
+        'class' => 'niveau-etudes-wrapper'
+    ]
+])
+// Nom du niveau
+->add('nom_niveau', TextType::class, [
+    'label' => 'Nom du niveau',
+    'required' => false,
+    'attr' => [
+        'class' => 'form-control',
+        'placeholder' => 'Ex: 6ème, 5ème, 2nde, etc.'
+    ],
+    'row_attr' => [
+        'class' => 'nom-niveau-wrapper'
+    ]
+])
         // Photo de profil
         ->add('photo', FileType::class, [
             'label' => 'Photo de profil',
