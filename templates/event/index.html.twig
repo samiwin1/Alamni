@@ -1,71 +1,125 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Event index{% endblock %}
+{% block title %}Events Management{% endblock %}
 
 {% block content %}
-    <div class="card">
-        <div class="card-header" style="padding: 20px; text-align: right;">
-            <a href="{{ path('app_event_new') }}" class="btn btn-success btn-lg">
-                 Add Event
-            </a>
-        </div>
-        <div class="card-header">
-            <h2>Liste des évènement</h2>
-        </div>
-        <div class="card-body">
-            {% if events is empty %}
-                <div class="alert alert-warning">Aucun évènement trouvé.</div>
-            {% else %}
-                <table class="table table-bordered table-striped" style="border-spacing: 25px; border-collapse: separate;">
+<div class="card animate-fade">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Events Management</h2>
+        <a href="{{ path('app_event_new') }}" class="btn btn-success">
+            <i class="fas fa-plus"></i>
+            <span>Add New Event</span>
+        </a>
+    </div>
+    
+    <div class="card-body">
+        {% if events is empty %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                No events found. Create your first event!
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th class="px-7">Id</th>
-                            <th class="px-7">Nom</th>
-                            <th class="px-7">Description</th>
-                            <th class="px-7">Date</th>
-                            <th class="px-7">Heure_Debut</th>
-                            <th class="px-7">Heure_Fin</th>
-                            <th class="px-7">Lieu</th>
-                            <th class="px-7">Image</th>
-                            <th class="px-7">Actions</th>
+                            <th>ID</th>
+                            <th>Event Name</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Location</th>
+                            <th>Image</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for event in events %}
-                            <tr>
-                                <td class="px-7">{{ event.id }}</td>
-                                <td class="px-7">{{ event.nom }}</td>
-                                <td class="px-7">{{ event.description }}</td>
-                                <td class="px-7">{{ event.date ? event.date|date('Y-m-d') : '' }}</td>
-                                <td class="px-7">{{ event.heureDebut ? event.heureDebut|date('H:i:s') : '' }}</td>
-                                <td class="px-7">{{ event.heureFin ? event.heureFin|date('H:i:s') : '' }}</td>
-                                <td class="px-7">{{ event.lieu }}</td>
-                                <td class="px-7">{{ event.image }}</td>
-                                <td class="px-7">
-                                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info btn-sm mx-2">
-                                        <i class="fas fa-eye"></i> Voir
-                                    </a>
-                                    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning btn-sm mx-2">
-                                        <i class="fas fa-edit"></i> Modifier
-                                    </a>
-                                    <form method="post" action="{{ path('app_event_delete', {'id': event.id}) }}" 
-                                          onsubmit="return confirm('Voulez-vous vraiment supprimer cette matière ?');"
-                                          style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="btn btn-danger btn-sm mx-2">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
+                            <tr class="animate-fade" style="animation-delay: {{ loop.index * 0.1 }}s">
+                                <td>{{ event.id }}</td>
+                                <td>
+                                    <div class="fw-bold">{{ event.nom }}</div>
                                 </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="9">No records found</td>
+                                <td>
+                                    <div class="text-muted">{{ event.description|length > 50 ? event.description|slice(0, 50) ~ '...' : event.description }}</div>
+                                </td>
+                                <td>{{ event.date ? event.date|date('M d, Y') : '' }}</td>
+                                <td>{{ event.heureDebut ? event.heureDebut|date('H:i') : '' }}</td>
+                                <td>{{ event.heureFin ? event.heureFin|date('H:i') : '' }}</td>
+                                <td>{{ event.lieu }}</td>
+                                <td class="event-image-cell">
+                                {% if event.image %}
+                                    <img src="{{ asset('uploads/events/' ~ event.image) }}" 
+                                        alt="{{ event.nom }}" 
+                                        class="event-thumbnail">
+                                {% else %}
+                                    <div class="no-image-placeholder">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                {% endif %}
+                              </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary btn-sm" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning btn-sm" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="post" action="{{ path('app_event_delete', {'id': event.id}) }}" 
+                                              onsubmit="return confirm('Are you sure you want to delete this event?');"
+                                              style="display: inline-block;">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     </div>
+</div>
+{% endblock %}
+{% block style %}
+<style>
+.event-image-cell {
+    width: 80px;
+    text-align: center;
+}
+
+.event-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.event-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+.no-image-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    margin: 0 auto;
+}
+
+.no-image-placeholder i {
+    font-size: 1.2rem;
+}
+</style>
 {% endblock %}

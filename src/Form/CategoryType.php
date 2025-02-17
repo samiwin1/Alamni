@@ -14,7 +14,7 @@ class CategoryType extends AbstractType
         $builder
             ->add('nom')
             ->add('description')
-            ->add('image')
+            
         ;
     }
 

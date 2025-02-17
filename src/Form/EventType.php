@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Event;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -75,11 +76,21 @@ class EventType extends AbstractType
                 ],
             ])
             ->add('image', FileType::class, [
-                'label' => 'Image',
+                'label' => 'Event image',
                 'mapped' => false,
                 'required' => false,
-                'attr' => ['class' => 'form-control'],
-            ])
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid image file',
+                    ])
+                ],
+        'required' => false, // Optional field
+    ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'nom',
