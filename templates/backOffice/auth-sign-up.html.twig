@@ -1,0 +1,268 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block hero %}{% endblock %}
+{% block call_to_action %}{% endblock %}
+{% block appointment %}{% endblock %}
+{% block testimonial %}{% endblock %}
+{% block team %}{% endblock %}
+{% block classes %}{% endblock %}
+{% block about %}{% endblock %}
+   
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+        <a href="{{ path('app_home') }}" class="navbar-brand">
+            <h1 class="m-0 text-primary"><i class="fa fa-book-reader me-3"></i>Kider</h1>
+        </a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav mx-auto">
+                <a href="{{ path('app_home') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_home' %}active{% endif %}">Home</a>
+                <a href="{{ path('app_about') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_about' %}active{% endif %}">About Us</a>
+                <a href="{{ path('app_classes') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_classes' %}active{% endif %}">Classes</a>
+           
+                <a href="{{ path('app_contact') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_contact' %}active{% endif %}">Contact Us</a>
+            </div>
+            <a href="login" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">Join Us<i class="fa fa-arrow-right ms-3"></i></a>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+	   <div class="container-xxl py-5 page-header position-relative text-center">
+        <div class="container py-5">
+            <h1 class="display-2 text-white animated slideInDown mb-4">Cree un compte</h1>
+           
+        </div>
+        <div class="wave-bottom"></div> {# Curved bottom effect #}
+    </div>
+
+	<section class="login">
+		  <div class="container d-flex align-items-center justify-content-center min-vh-80">
+        <div class="login-card p-5 shadow-lg rounded-4 bg-white">
+			
+					 <div class="text-center">
+					
+						<h3 class="text-center mb-4">Créer un compte</h3>
+
+						{{ form_start(form, {'attr': {'id': 'signupForm'}}) }}
+
+						{# Photo #}
+						<div class="form-group text-center">
+							<div id="imagePreview" style="display: none;">
+								<img src="" alt="Aperçu" class="preview-image">
+							</div>
+							<div class="custom-file">
+								{{ form_widget(form.photo, {
+                                    'attr': {
+                                        'class': 'custom-file-input',
+                                        'id': 'photoInput',
+                                        'accept': 'image/*'
+                                    }
+                                }) }}
+								<label class="custom-file-label" for="photoInput">Choisir une photo</label>
+							</div>
+							{{ form_errors(form.photo) }}
+						</div>
+<br>
+						{# Nom #}
+						<div class="form-group">
+							{{ form_widget(form.nom, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre nom'
+                                }
+                            }) }}
+							{{ form_errors(form.nom) }}
+						</div>
+<br>
+						{# Prénom #}
+						<div class="form-group">
+							{{ form_widget(form.prenom, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre prénom'
+                                }
+                            }) }}
+							{{ form_errors(form.prenom) }}
+						</div>
+<br>
+						{# Email #}
+						<div class="form-group">
+							{{ form_widget(form.email, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Votre email'
+                                }
+                            }) }}
+							{{ form_errors(form.email) }}
+						</div>
+<br>
+						{# Mot de passe #}
+						<div class="form-group">
+							{{ form_widget(form.mot_de_passe, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Mot de passe (8 caractères minimum)'
+                                }
+                            }) }}
+							{{ form_errors(form.mot_de_passe) }}
+						</div>
+<br>
+						{# Role #}
+						<div class="form-group">
+							{{ form_widget(form.role, {
+                                'attr': {
+                                    'class': 'form-control'
+                                }
+                            }) }}
+							{{ form_errors(form.role) }}
+						</div>
+
+<br>						{# Niveau #}
+						<div class="form-group">
+							{{ form_widget(form.niveau, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Sélectionnez votre niveau'
+                                }
+                            }) }}
+							{{ form_errors(form.niveau) }}
+						</div>
+
+<br>						{# Nom du niveau #}
+						<div class="form-group" id="nomNiveauGroup" style="width:100%;">
+							{{ form_widget(form.nom_niveau, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Précisez votre niveau (ex: 6ème, 2nde...)'
+                                }
+                            }) }}
+							{{ form_errors(form.nom_niveau) }}
+						</div>
+
+						<div class="form-group">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="terms" required>
+								<label class="custom-control-label" for="terms">
+									J'accepte les
+									<a href="#">conditions d'utilisation</a>
+								</label>
+							</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary btn-block">Créer Mon Compte</button>
+
+						<div class="text-center mt-4">
+							<p>Vous avez déjà un compte ?
+								<a href="{{ path('login') }}">Se connecter</a>
+							</p>
+						</div>
+
+						{{ form_end(form) }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sélection des éléments du formulaire
+            const form = document.getElementById('signupForm');
+            const photoInput = document.getElementById('photoInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImage = imagePreview.querySelector('img');
+            const fileLabel = document.querySelector('.custom-file-label');
+            const roleSelect = document.querySelector('select[name="user[role]"]');
+            const niveauSelect = document.querySelector('select[name="user[niveau]"]');
+            const nomNiveauInput = document.querySelector('input[name="user[nom_niveau]"]');
+            const niveauGroup = niveauSelect.closest('.form-group');
+            const nomNiveauGroup = nomNiveauInput.closest('.form-group');
+
+            // Gestion de la prévisualisation de la photo
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImage.src = e.target.result;
+                            imagePreview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                        fileLabel.textContent = file.name;
+                    } else {
+                        imagePreview.style.display = 'none';
+                        fileLabel.textContent = 'Choisir une photo';
+                    }
+                });
+            }
+
+            // Fonction pour gérer l'affichage des champs de niveau
+            function toggleNiveauFields() {
+                const isEleve = roleSelect.value === 'ROLE_ELEVE';
+                
+                // Afficher/masquer les champs de niveau
+                niveauGroup.style.display = isEleve ? 'block' : 'none';
+                nomNiveauGroup.style.display = isEleve ? 'block' : 'none';
+
+                // Réinitialiser les valeurs si ce n'est pas un élève
+                if (!isEleve) {
+                    niveauSelect.value = '';
+                    nomNiveauInput.value = '';
+                }
+            }
+
+            // Écouter les changements sur le select du rôle
+            if (roleSelect) {
+                roleSelect.addEventListener('change', toggleNiveauFields);
+            }
+
+            // Validation du formulaire
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Validation du mot de passe
+                    const password = form.querySelector('input[name="user[mot_de_passe]"]');
+                    if (password && password.value.length < 8) {
+                        e.preventDefault();
+                        alert('Le mot de passe doit contenir au moins 8 caractères');
+                        return;
+                    }
+
+                    // Validation des champs de niveau pour les élèves
+                    if (roleSelect && roleSelect.value === 'ROLE_ELEVE') {
+                        if (!niveauSelect.value) {
+                            e.preventDefault();
+                            alert('Veuillez sélectionner un niveau d\'études');
+                            return;
+                        }
+                        
+                        if (!nomNiveauInput.value) {
+                            e.preventDefault();
+                            alert('Veuillez préciser votre niveau');
+                            return;
+                        }
+                    }
+
+                    // Validation des conditions d'utilisation
+                    const terms = document.getElementById('terms');
+                    if (terms && !terms.checked) {
+                        e.preventDefault();
+                        alert('Veuillez accepter les conditions d\'utilisation');
+                        return;
+                    }
+                });
+            }
+
+            // Initialisation de l'état des champs de niveau
+            toggleNiveauFields();
+        });
+    </script>
+{% endblock %}
