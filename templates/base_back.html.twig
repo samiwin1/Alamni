@@ -252,7 +252,8 @@
 </head>
 
 <body>
-    {% if app.session.get('user_email') or app.request.get('_route') in ['login', 'app_signin'] %}
+/** @var User $user */
+    {% if app.session.get('user_email') and user is defined and user.role == 'ROLE_ADMIN' %}
         <div class="pcoded">
             <!-- Sidebar -->
             <nav class="pcoded-navbar">
@@ -261,16 +262,17 @@
                     <span>ALAMNI</span>
                 </div>
 
-             <div class="main-menu-header">
- 
-    <div class="user-details">
-        <a href="{{ path('user_profile') }}" class="user-name-link">
-            
-        </a>
-        
-        
-    </div>
-</div>
+                <div class="main-menu-header">
+                    <img src="{% if user.photo %}data:image/jpeg;base64,{{ user.photo }}{% else %}{{ asset('back/images/avatar-4.jpg') }}{% endif %}" 
+                         class="img-radius" 
+                         alt="User-Profile-Image">
+                    <div class="user-details">
+                        <a href="{{ path('user_profile') }}" class="user-name-link">
+                            <span class="user-name">{{ user.nom }} {{ user.prenom }}</span>
+                        </a>
+                        <span class="text-muted">{{ user.role }}</span>
+                    </div>
+                </div>
 
                 <ul class="pcoded-item">
                     <li class="active">
@@ -285,12 +287,12 @@
                             <span>Management</span>
                          </a>
             <ul class="nested-menu">
-                <li><a href="#"><i class="fas fa-user"></i>User</a></li>
+                <li><a href="{{ path('admin_dashboard') }}"<i class="fas fa-user"></i>User</a></li>
                 <li><a href="#"><i class="fas fa-chalkboard"></i>Classes</a></li>
                 <li><a href="#"><i class="fas fa-comments"></i>Discussions</a></li>
                 <li><a href="#"><i class="fas fa-newspaper"></i>Publications</a></li>
                 <li><a href="#"><i class="fas fa-users"></i>Club</a></li>
-                <li><a href="/planning-management"><i class="fas fa-calendar"></i>Planning</a></li>
+                <li><a href="planning-management"><i class="fas fa-calendar"></i>Planning</a></li>
             </ul>
         </li>
         <!-- Ajout du lien de déconnexion -->
@@ -391,7 +393,8 @@
     {% else %}
         <div class="alert alert-warning text-center">
             <h4>Accès restreint</h4>
-            <p>Veuillez vous <a href="{{ path('login') }}">connecter</a> pour accéder au dashboard.</p>
+            <p>Vous n'avez pas les droits nécessaires pour accéder à cette page.</p>
+            <a href="{{ path('app_home') }}" class="btn btn-primary">Retour à l'accueil</a>
         </div>
     {% endif %}
 

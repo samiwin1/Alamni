@@ -23,7 +23,6 @@
                 <a href="{{ path('app_home') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_home' %}active{% endif %}">Home</a>
                 <a href="{{ path('app_about') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_about' %}active{% endif %}">About Us</a>
                 <a href="{{ path('app_classes') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_classes' %}active{% endif %}">Classes</a>
-           
                 <a href="{{ path('app_contact') }}" class="nav-item nav-link {% if app.request.get('_route') == 'app_contact' %}active{% endif %}">Contact Us</a>
             </div>
             <a href="login" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">Join Us<i class="fa fa-arrow-right ms-3"></i></a>
@@ -31,15 +30,13 @@
     </nav>
 {% endblock %}
 
-
 {% block content %}
     <!-- Page Header -->
     <div class="container-xxl py-5 page-header position-relative text-center">
         <div class="container py-5">
             <h1 class="display-2 text-white animated slideInDown mb-4">Connexion</h1>
-           
         </div>
-        <div class="wave-bottom"></div> {# Curved bottom effect #}
+        <div class="wave-bottom"></div>
     </div>
 
     <!-- Login Section -->
@@ -50,24 +47,19 @@
                 <p class="text-muted">Veuillez entrer vos identifiants</p>
             </div>
 
-            <!-- Flash Messages -->
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }} text-center rounded-3">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
+            <div id="alertContainer"></div>
 
             <!-- Login Form -->
-            <form method="post" action="{{ path('login') }}">
+            <form method="post" action="{{ path('login') }}" id="loginForm" novalidate>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Email</label>
-                    <input type="email" name="_username" class="form-control p-3 rounded-3" placeholder="Votre email" required>
+                    <input type="email" name="_username" class="form-control p-3 rounded-3" placeholder="Votre email">
+                    <div class="error-message"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Mot de passe</label>
-                    <input type="password" name="_password" class="form-control p-3 rounded-3" placeholder="Votre mot de passe" required>
+                    <input type="password" name="_password" class="form-control p-3 rounded-3" placeholder="Votre mot de passe">
+                    <div class="error-message"></div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 mt-3">
                     <i class="fas fa-sign-in-alt"></i> Se connecter
@@ -85,13 +77,12 @@
 {% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <style>
-        /* Centering Fix */
         .min-vh-80 {
-            min-height: 80vh; /* Keeps login form centered */
+            min-height: 80vh;
         }
 
-        /* Login Card */
         .login-card {
             width: 420px;
             text-align: center;
@@ -101,44 +92,72 @@
             animation: fadeIn 0.6s ease-in-out;
         }
 
-        /* Form Styling */
         .form-control {
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid #FEC89A;
             color: #333;
             font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #FF6B6B;
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
         }
 
         .form-control::placeholder {
             color: #999;
         }
 
-        /* Buttons */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .form-control.is-valid {
+            border-color: #198754;
+        }
+
         .btn-primary {
             background: #FF6B6B;
             border: none;
-            transition: 0.3s ease-in-out;
+            transition: all 0.3s ease;
             font-size: 16px;
         }
 
         .btn-primary:hover {
             background: #EE5253;
-            transform: scale(1.03);
+            transform: translateY(-2px);
         }
 
         .btn-outline-secondary {
             border: 1px solid #FF6B6B;
             color: #FF6B6B;
+            transition: all 0.3s ease;
             font-size: 16px;
         }
 
         .btn-outline-secondary:hover {
             background: #FF6B6B;
             color: white;
-            transform: scale(1.03);
+            transform: translateY(-2px);
         }
 
-        /* Animations */
+        .alert {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            animation: slideDown 0.4s ease-out;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -150,18 +169,114 @@
             }
         }
 
-        /* Responsive Fixes */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         @media (max-width: 768px) {
             .login-card {
                 width: 90%;
                 padding: 20px;
             }
-            .form-control {
-                font-size: 14px;
-            }
-            .btn {
+            .form-control, .btn {
                 font-size: 14px;
             }
         }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.querySelector('input[name="_username"]');
+            const passwordInput = document.querySelector('input[name="_password"]');
+            const alertContainer = document.getElementById('alertContainer');
+
+            function showError(input, message) {
+                const errorDiv = input.nextElementSibling;
+                input.classList.add('is-invalid');
+                input.classList.remove('is-valid');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+
+            function showSuccess(input) {
+                const errorDiv = input.nextElementSibling;
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+                errorDiv.style.display = 'none';
+            }
+
+            function validateEmail(email) {
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email) {
+                    return "L'email est requis";
+                }
+                if (!regex.test(email)) {
+                    return "Format d'email invalide";
+                }
+                return "";
+            }
+
+            function validatePassword(password) {
+                if (!password) {
+                    return "Le mot de passe est requis";
+                }
+                if (password.length < 8) {
+                    return "Le mot de passe doit contenir au moins 8 caractères";
+                }
+                return "";
+            }
+
+            // Validation en temps réel
+            emailInput.addEventListener('input', function() {
+                const error = validateEmail(this.value);
+                if (error) {
+                    showError(this, error);
+                } else {
+                    showSuccess(this);
+                }
+            });
+
+            passwordInput.addEventListener('input', function() {
+                const error = validatePassword(this.value);
+                if (error) {
+                    showError(this, error);
+                } else {
+                    showSuccess(this);
+                }
+            });
+
+            // Validation à la soumission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+
+                const emailError = validateEmail(emailInput.value);
+                if (emailError) {
+                    showError(emailInput, emailError);
+                    isValid = false;
+                }
+
+                const passwordError = validatePassword(passwordInput.value);
+                if (passwordError) {
+                    showError(passwordInput, passwordError);
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    this.submit();
+                }
+            });
+        });
+    </script>
 {% endblock %}

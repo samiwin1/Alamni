@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -39,6 +41,17 @@ class User
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom_niveau = null;
+
+    /**
+     * @var Collection<int, Planning>
+     */
+    #[ORM\OneToMany(targetEntity: Planning::class, mappedBy: 'user')]
+    private Collection $plannings;
+
+    public function __construct()
+    {
+        $this->plannings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -147,5 +160,35 @@ class User
     public function getFormattedDateInscription(): string
     {
         return $this->date_inscription ? $this->date_inscription->format('d/m/Y H:i') : '';
+    }
+
+    /**
+     * @return Collection<int, Planning>
+     */
+    public function getPlannings(): Collection
+    {
+        return $this->plannings;
+    }
+
+    public function addPlanning(Planning $planning): static
+    {
+        if (!$this->plannings->contains($planning)) {
+            $this->plannings->add($planning);
+            $planning->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanning(Planning $planning): static
+    {
+        if ($this->plannings->removeElement($planning)) {
+            // set the owning side to null (unless already changed)
+            if ($planning->getUser() === $this) {
+                $planning->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

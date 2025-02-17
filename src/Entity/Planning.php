@@ -33,6 +33,10 @@ class Planning
     #[ORM\ManyToOne(inversedBy: 'plannings')]
     private ?Seance $seance = null;
 
+    #[ORM\ManyToOne(inversedBy: 'plannings')]
+    private ?User $user = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +108,18 @@ class Planning
     public function setSeance(?Seance $seance): static
     {
         $this->seance = $seance;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
         return $this;
     }
 }

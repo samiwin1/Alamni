@@ -5,66 +5,157 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Entity\User;
 use App\Repository\PlanningRepository;
+use App\Form\UserType;
 
 class FrontController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
-    public function home(): Response
+    private function getLoggedInUser(Request $request, EntityManagerInterface $entityManager): ?User
     {
-        return $this->render('base_front.html.twig'); 
+        $email = $request->getSession()->get('user_email');
+        if (!$email) {
+            return null;
+        }
+        return $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+    }
+
+    #[Route('/', name: 'app_home')]
+    public function home(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getLoggedInUser($request, $entityManager);
+        return $this->render('base_front.html.twig', [
+            'user' => $user
+        ]); 
     }
 
     #[Route('/about', name: 'app_about')]
-    public function about(): Response
+    public function about(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('frontOffice/about.html.twig');
+        $user = $this->getLoggedInUser($request, $entityManager);
+        return $this->render('frontOffice/about.html.twig', [
+            'user' => $user
+        ]);
     }
 
     #[Route('/classes', name: 'app_classes')]
-    public function classes(): Response
+    public function classes(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('frontOffice/classes.html.twig'); // No data passed for now
+        $user = $this->getLoggedInUser($request, $entityManager);
+        return $this->render('frontOffice/classes.html.twig', [
+            'user' => $user
+        ]); 
     }
 
     #[Route('/facility', name: 'app_facility')]
-    public function facility(PlanningRepository $planningRepository): Response
+    public function facility(Request $request, EntityManagerInterface $entityManager, PlanningRepository $planningRepository): Response
     {
-        // Fetch all planning data
+        $user = $this->getLoggedInUser($request, $entityManager);
         $planning = $planningRepository->findAll();
     
         return $this->render('frontOffice/facility.html.twig', [
+            'user' => $user,
             'planning' => $planning
         ]);
     }
     
+
     #[Route('/team', name: 'app_team')]
-    public function team(): Response
+    public function team(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('frontOffice/team.html.twig');
+        $user = $this->getLoggedInUser($request, $entityManager);
+        return $this->render('frontOffice/team.html.twig', [
+            'user' => $user
+        ]);
     }
 
     #[Route('/call-to-action', name: 'app_cta')]
-    public function callToAction(): Response
+    public function callToAction(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('frontOffice/call-to-action.html.twig');
+        $user = $this->getLoggedInUser($request, $entityManager);
+        return $this->render('frontOffice/call-to-action.html.twig', [
+            'user' => $user
+        ]);
     }
 
     #[Route('/appointment', name: 'app_appointment')]
-    public function appointment(): Response
+    public function appointment(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('frontOffice/appointment.html.twig');
+        $user = $this->getLoggedInUser($request, $entityManager);
+        return $this->render('frontOffice/appointment.html.twig', [
+            'user' => $user
+        ]);
     }
 
     #[Route('/contact', name: 'app_contact')]
-    public function contact(): Response
+    public function contact(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('frontOffice/contact.html.twig');
+        $user = $this->getLoggedInUser($request, $entityManager);
+        return $this->render('frontOffice/contact.html.twig', [
+            'user' => $user
+        ]);
     }
 
     #[Route('/404', name: 'app_404')]
-    public function notFound(): Response
+    public function notFound(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('frontOffice/404.html.twig');
+        $user = $this->getLoggedInUser($request, $entityManager);
+        return $this->render('frontOffice/404.html.twig', [
+            'user' => $user
+        ]);
     }
+
+    #[Route('/profile-utilisateur', name: 'profile_utilisateur')]
+public function profileUtilisateur(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $user = $this->getLoggedInUser($request, $entityManager);
+    if (!$user) {
+        $this->addFlash('error', 'Veuillez vous connecter');
+        return $this->redirectToRoute('login');
+    }
+    
+    return $this->render('frontOffice/profileUtilisateur.html.twig', [
+        'user' => $user
+    ]);
+}
+
+#[Route('/profile-utilisateur/edit', name: 'front_profile_edit')]
+public function editProfileFront(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $user = $this->getLoggedInUser($request, $entityManager);
+    if (!$user) {
+        $this->addFlash('error', 'Veuillez vous connecter');
+        return $this->redirectToRoute('login');
+    }
+
+    $form = $this->createForm(UserType::class, $user, [
+        'is_edit' => true,
+    ]);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $photoFile = $form->get('photo')->getData();
+        if ($photoFile) {
+            $imageContent = file_get_contents($photoFile->getPathname());
+            $base64Image = base64_encode($imageContent);
+            $user->setPhoto($base64Image);
+        }
+
+        $newPassword = $form->get('mot_de_passe')->getData();
+        if (!empty($newPassword)) {
+            $user->setMotDePasse(password_hash($newPassword, PASSWORD_DEFAULT));
+        }
+
+        $entityManager->flush();
+        $this->addFlash('success', 'Profil mis à jour avec succès');
+        return $this->redirectToRoute('profile_utilisateur');
+    }
+
+    return $this->render('frontOffice/editProfile.html.twig', [
+        'form' => $form->createView(),
+        'user' => $user
+    ]);
+}
 }

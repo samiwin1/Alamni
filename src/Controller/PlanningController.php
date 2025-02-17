@@ -9,24 +9,25 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/planning-management')]
 final class PlanningController extends AbstractController {
     
+    // Display all planning records
     #[Route('/', name: 'app_planning_index', methods: ['GET'])]
     public function index(PlanningRepository $planningRepository): Response
     {
         $plannings = $planningRepository->findAll();
-        dump($plannings); // Debugging
-        $user = $this->getUser();
+        $user = $this->getUser(); // Access the logged-in user
 
         return $this->render('planning/index.html.twig', [
             'plannings' => $plannings,
-            'user' => $user,
+            'user' => $user, // Pass user to the view
         ]);
     }
 
+    // Create a new planning record
     #[Route('/new', name: 'app_planning_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -34,14 +35,7 @@ final class PlanningController extends AbstractController {
         $form = $this->createForm(PlanningType::class, $planning);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            dump('Form submitted'); // Debugging
-            dump($form->isValid()); // Debugging: Check if the form is valid
-            dump($form->getErrors(true)); // Debugging: Display form errors
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            dump('Form is valid'); // Debugging
             $entityManager->persist($planning);
             $entityManager->flush();
 
@@ -50,18 +44,22 @@ final class PlanningController extends AbstractController {
 
         return $this->render('planning/new.html.twig', [
             'planning' => $planning,
-            'form' => $form->createView(), // Ensure form is passed as a view
+            'form' => $form->createView(),
+            'user' => $this->getUser(), // Pass user to the view
         ]);
     }
 
+    // Show a specific planning record
     #[Route('/{id}', name: 'app_planning_show', methods: ['GET'])]
     public function show(Planning $planning): Response
     {
         return $this->render('planning/show.html.twig', [
             'planning' => $planning,
+            'user' => $this->getUser(), // Pass user to the view
         ]);
     }
 
+    // Edit an existing planning record
     #[Route('/{id}/edit', name: 'app_planning_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Planning $planning, EntityManagerInterface $entityManager): Response
     {
@@ -76,10 +74,12 @@ final class PlanningController extends AbstractController {
 
         return $this->render('planning/edit.html.twig', [
             'planning' => $planning,
-            'form' => $form->createView(), // Fixed missing createView()
+            'form' => $form->createView(),
+            'user' => $this->getUser(), // Pass user to the view
         ]);
     }
 
+    // Delete a planning record
     #[Route('/{id}/delete', name: 'app_planning_delete', methods: ['POST'])]
     public function delete(Request $request, Planning $planning, EntityManagerInterface $entityManager): Response
     {
@@ -90,7 +90,4 @@ final class PlanningController extends AbstractController {
 
         return $this->redirectToRoute('app_planning_index', [], Response::HTTP_SEE_OTHER);
     }
-
-
-    
 }

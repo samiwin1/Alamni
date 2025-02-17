@@ -12,117 +12,159 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // Nom
             ->add('nom', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom est requis'
+                    ]),
+                    new Length([
+                        'min' => 2,
+                        'max' => 50,
+                        'minMessage' => 'Le nom doit contenir au moins {{ limit }} caractères',
+                        'maxMessage' => 'Le nom ne peut pas dépasser {{ limit }} caractères'
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZÀ-ÿ\s-]+$/',
+                        'message' => 'Le nom ne peut contenir que des lettres, espaces et tirets'
+                    ])
+                ],
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Votre nom'
                 ]
             ])
-            // Prénom
             ->add('prenom', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le prénom est requis'
+                    ]),
+                    new Length([
+                        'min' => 2,
+                        'max' => 50,
+                        'minMessage' => 'Le prénom doit contenir au moins {{ limit }} caractères',
+                        'maxMessage' => 'Le prénom ne peut pas dépasser {{ limit }} caractères'
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZÀ-ÿ\s-]+$/',
+                        'message' => 'Le prénom ne peut contenir que des lettres, espaces et tirets'
+                    ])
+                ],
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Votre prénom'
                 ]
             ])
-            // Email
             ->add('email', EmailType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'L\'email est requis'
+                    ]),
+                    new Email([
+                        'message' => 'L\'email "{{ value }}" n\'est pas valide'
+                    ])
+                ],
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Votre email'
                 ]
             ]);
 
-        // Gestion conditionnelle du mot de passe
         if ($options['is_edit']) {
             $builder->add('mot_de_passe', PasswordType::class, [
-                'mapped' => false,
                 'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new Length([
+                        'min' => 8,
+                        'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères'
+                    ])
+                ],
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Laissez vide pour garder le même mot de passe'
                 ]
             ]);
         } else {
-            $builder->add('mot_de_passe', PasswordType::class, [
-                'required' => true,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Minimum 8 caractères'
-                ]
-            ]);
+            $builder
+                ->add('mot_de_passe', PasswordType::class, [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Le mot de passe est requis'
+                        ]),
+                        new Length([
+                            'min' => 8,
+                            'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères'
+                        ])
+                    ],
+                    'attr' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'Minimum 8 caractères'
+                    ]
+                ])
+                ->add('role', ChoiceType::class, [
+                    'required' => true,
+                    'choices' => [
+                        'Élève' => 'ROLE_ELEVE',
+                        'Enseignant' => 'ROLE_ENSEIGNANT',
+                        'Parent' => 'ROLE_PARENT',
+                        'Administrateur' => 'ROLE_ADMIN'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control'
+                    ]
+                ])
+                ->add('niveau', ChoiceType::class, [
+                    'required' => false,
+                    'choices' => [
+                        'Collège' => 'college',
+                        'Lycée' => 'lycee'
+                    ],
+                    'placeholder' => 'Sélectionnez un niveau',
+                    'attr' => [
+                        'class' => 'form-control'
+                    ]
+                ])
+                ->add('nom_niveau', TextType::class, [
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'Ex: 6ème, 5ème, 2nde...'
+                    ]
+                ]);
         }
 
-        // Ajout du rôle uniquement pour la création
-        if (!$options['is_edit']) {
-            $builder->add('role', ChoiceType::class, [
-                'choices' => [
-                    'Élève' => 'ROLE_ELEVE',
-                    'Enseignant' => 'ROLE_ENSEIGNANT',
-                    'Parent' => 'ROLE_PARENT',
-                    'Administrateur' => 'ROLE_ADMIN'
-                ],
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-            ]);
-        }
-
-        // Niveau d'études
-   // Niveau d'études
-$builder->add('niveau', ChoiceType::class, [
-    'label' => 'Niveau d\'études',
-    'required' => false,
-    'choices' => [
-        'Collège' => 'college',
-        'Lycée' => 'lycee'
-    ],
-    'placeholder' => 'Sélectionnez un niveau',
-    'attr' => [
-        'class' => 'form-control'
-    ],
-    'row_attr' => [
-        'class' => 'niveau-etudes-wrapper'
-    ]
-])
-// Nom du niveau
-->add('nom_niveau', TextType::class, [
-    'label' => 'Nom du niveau',
-    'required' => false,
-    'attr' => [
-        'class' => 'form-control',
-        'placeholder' => 'Ex: 6ème, 5ème, 2nde, etc.'
-    ],
-    'row_attr' => [
-        'class' => 'nom-niveau-wrapper'
-    ]
-])
-        // Photo de profil
-        ->add('photo', FileType::class, [
-            'label' => 'Photo de profil',
-            'mapped' => false,
+        $builder->add('photo', FileType::class, [
             'required' => false,
+            'mapped' => false,
             'constraints' => [
                 new File([
-                    'maxSize' => '2M',
+                    'maxSize' => '5M',
                     'mimeTypes' => [
                         'image/jpeg',
                         'image/png',
-                        'image/gif',
+                        'image/gif'
                     ],
                     'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, GIF)',
+                    'maxSizeMessage' => 'L\'image ne doit pas dépasser 5 Mo'
                 ])
             ],
             'attr' => [
                 'class' => 'form-control',
-                'accept' => 'image/*' // Permet de filtrer les fichiers dans le sélecteur
+                'accept' => 'image/*'
             ]
         ]);
     }
@@ -132,12 +174,10 @@ $builder->add('niveau', ChoiceType::class, [
         $resolver->setDefaults([
             'data_class' => User::class,
             'is_edit' => false,
-            'validation_groups' => ['Default'], // Vous pouvez ajouter des groupes de validation si nécessaire
+            'csrf_protection' => true,
+            'validation_groups' => ['Default']
         ]);
-    }
 
-    public function getBlockPrefix(): string
-    {
-        return 'user'; // Définit le préfixe pour les noms des champs du formulaire
+        $resolver->setAllowedTypes('is_edit', 'bool');
     }
 }
